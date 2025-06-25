@@ -3,4 +3,4 @@ from django.http import HttpResponse
 from django.views import View
 
 def vacancyinfo(request):
-   return HttpResponse("Перечень доступных вакансий и их описаний")
+   return render(request, 'employee/index.html')
