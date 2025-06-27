@@ -1,18 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.views import View
-from .models import Vacancy
-import json
+from .models import  Vacancy
+import json 
 
-# def vacancy_list(request):
-#    vacancies = {}
-#    for vacancy in Vacancy.objects.all():
-#       vacancies[vacancy.id] = {
-#          'title': vacancy.title,
-#          'description': vacancy.description
-#       }
-   
-#    return JsonResponse(vacancies)
+def vacancyinfo(request):
+   username = request.user.username
+   return render(request, 'employee/index.html', {'username': username})
 
 def vacancy_list(request):
    vacancies = Vacancy.objects.all()
@@ -22,6 +16,3 @@ def vacancy_list(request):
    
    return render(request, 'employee/index.html',{'vacancies': vacancies,
                                                  'vacancies_json':json.dumps(vacancies_data)})
-
-def vacancyinfo(request):
-   return render(request, 'employee/index.html')

@@ -17,44 +17,11 @@ const stepText2 = document.getElementById('step-text2');
 const progressText = document.getElementById('progress-text');
 const button = document.getElementById('button');
 
-// Данные о вакансиях временно для теста функционала
-// const vacancies = {
-//     'frontend': {
-//         title: 'Frontend разработчик',
-//         description: 'Мы ищем фронтенд-разработчика с опытом работы с React от 2 лет. Обязательные навыки: JavaScript, React, Redux, HTML/CSS, работа с REST API.',
-//         questions: [
-//             'Расскажите о своем опыте работы с React. Какие проекты вы разрабатывали?',
-//             'Как вы организуете управление состоянием в React-приложении?',
-//             'Опишите процесс оптимизации производительности React-приложения.']
-//     },
-//     'backend': {
-//         title: 'Backend разработчик',
-//         description: 'Требуется бэкенд-разработчик с опытом работы с Node.js от 3 лет. Знание SQL/NoSQL баз данных, Docker, микросервисной архитектуры.',
-
-//     }
-// }
-
 //начальное состояние страницы
 let currentVacancy = null;
 questionContainer.style.opacity =0;
 let currentQuestionIndex = 0;
 let answers = Array(3).fill('');
-
-// let vacancies = {};
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const select = document.getElementById('vacancy-select');
-//     const descriptionDiv = document.getElementById('vacancy-description');
-    
-//     select.addEventListener('change', function() {
-//         const selectedValue = this.value;
-//         if (selectedValue && vacanciesData[selectedValue]) {
-//             descriptionDiv.innerHTML = vacanciesData[selectedValue].description;
-//         } else {
-//             descriptionDiv.innerHTML = '';
-//         }
-//     });
-// });
 
 //обрабатываю выбор вакансии
 vacancySelect.addEventListener('change', function() {
@@ -156,10 +123,3 @@ textarea.addEventListener('input', function() {
     answers[currentQuestionIndex] = textarea.value;
     updateFinishButton();
 });
-
-
-
-
-
-
-
