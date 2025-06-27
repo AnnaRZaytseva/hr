@@ -2,11 +2,11 @@ const vacancySelect = document.getElementById('vacancy-select');
 const startInterviewBtn = document.getElementById('start-interview-btn');
 const vacancyTitle = document.getElementById('vacancy-title');
 const vacancyDescription = document.getElementById('vacancy-description');
-const textarea = document.getElementById('answer');
+const textArea = document.getElementById('answer');
 const questionContainer = document.getElementById('question-container');
 const vacancySelection = document.getElementById('vacancy-selection');
 const questionText = document.getElementById('question-text');
-const prevBtn = document.getElementById('prev');
+
 const nextBtn = document.getElementById('next');
 const progressQuestions = document.getElementById('progress-questions');
 const progressFill = document.getElementById('progress-fill');
@@ -21,10 +21,10 @@ const button = document.getElementById('button');
 let currentVacancy = null;
 questionContainer.style.opacity =0;
 let currentQuestionIndex = 0;
-let answers = Array(3).fill('');
 
 //обрабатываю выбор вакансии
 vacancySelect.addEventListener('change', function() {
+
     const selectedValue = this.value; //выбранная вакансия сохраняется
     startInterviewBtn.disabled = !selectedValue; //если не выбрана то кнопка не доступна для нажатия
 
@@ -50,22 +50,35 @@ vacancySelect.addEventListener('change', function() {
 
 //начало тестирования
 startInterviewBtn.addEventListener('click', function() {
-    if (!vacancies[currentVacancy].questions || vacancies[currentVacancy].questions.length === 0) {
-        alert('Для выбранной вакансии нет вопросов');
-        return;
-    }
+    //if (!vacancies[currentVacancy].questions || vacancies[currentVacancy].questions.length === 0) {
+    //    alert('Для выбранной вакансии нет вопросов');
+     //   return;}
+
     vacancySelection.style.display = 'none';
     questionContainer.style.display = 'block';
     progressText.textContent= 'шаг 2 из 3';
     progressFill.style.width = "66%";
 
+    fetch('/employee/getq_first/') // Замените на ваш URL для получения вопроса
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            questionText.textContent = data.question;
+        })
+            .catch(error => {
+                console.error('Error fetching initial question:', error);
+        });
 
-
-    // Загружаю первый вопрос
     currentQuestionIndex = 0;
+
+    /*
     questionText.textContent = vacancies[currentVacancy].questions[currentQuestionIndex];
     progressQuestions.textContent = `Вопрос ${currentQuestionIndex + 1} из ${vacancies[currentVacancy].questions.length}`;
-
+    */
 
     // Анимация появления
     let opacity = 0;
@@ -84,42 +97,86 @@ startInterviewBtn.addEventListener('click', function() {
 
 });
 
-if(currentQuestionIndex = 0){
-    prevBtn.disabled = true;
-} else{
-    prevBtn.disabled = false;
-}
+nextBtn.addEventListener('click', function() {
 
-prevBtn.addEventListener('click', function(){
+    const answer = textArea.value;
 
-    if (currentQuestionIndex > 0) {
-        currentQuestionIndex -= 1;
-        textarea.value= answers[currentQuestionIndex];
-        questionText.textContent = vacancies[currentVacancy].questions[currentQuestionIndex];
-        progressQuestions.textContent = `Вопрос ${currentQuestionIndex + 1} из ${vacancies[currentVacancy].questions.length}`;
-    }
-    updateFinishButton();
+    fetch('/employee/vacancyinfo/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ answer: answer })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Ошибка при отправке ответа: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+
+        if (data.success) {
+            return fetch('/employee/getq/');
+        } else {
+            console.error("Ошибка сервера при обработке ответа:", data);
+            throw new Error("Ошибка сервера при обработке ответа"); //  Перебрасываем ошибку для обработки в .catch
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Ошибка при получении следующего вопроса: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        textArea.value = '';
+    })
+    .catch(error => {
+        console.error('Произошла ошибка:', error);
 });
 
-nextBtn.addEventListener('click', function(){
-
-    if (currentQuestionIndex < vacancies[currentVacancy].questions.length - 1) {
-        currentQuestionIndex += 1;
-        textarea.value= answers[currentQuestionIndex];
-        questionText.textContent = vacancies[currentVacancy].questions[currentQuestionIndex];
-        progressQuestions.textContent = `Вопрос ${currentQuestionIndex + 1} из ${vacancies[currentVacancy].questions.length}`;
+    fetch('/employee/getq/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.question == 'КОНЕЦ') {
+                questionText.textContent = 'Собеседование закончено! Мы с вами свяжемся в ближайшее время.';
+                textArea.value = '';
+                nextBtn.disabled = true;
+            } else {
+                questionText.textContent = data.question;
+                textArea.value = '';
+                currentQuestionIndex += 1;
+                progressQuestions.textContent = `Вопрос ${currentQuestionIndex + 1}`;
     }
-    updateFinishButton();
+        })
+            .catch(error => {
+                console.error('Error fetching initial question:', error);
+        });
 
 });
 
+/*
 function areAllQuestionsAnswered() {
     return answers.every(answer => answer.trim() !== '');
 }
 function updateFinishButton() {
     button.disabled = !areAllQuestionsAnswered();
 }
+*/
+
+/*
 textarea.addEventListener('input', function() {
-    answers[currentQuestionIndex] = textarea.value;
+    answers[currentQuestionIndex] = textArea.value;
     updateFinishButton();
 });
+*/
+
+
+
+

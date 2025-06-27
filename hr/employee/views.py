@@ -1,12 +1,17 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from .models import  Vacancy
 import json 
+from .ai.ai_func import begin, get_q
 
-def vacancyinfo(request):
-   username = request.user.username
-   return render(request, 'employee/index.html', {'username': username})
+messages = {}
+
+
+# def vacancyinfo(request):
+#    username = request.user.username
+#    return render(request, 'employee/index.html', {'username': username})
 
 def vacancy_list(request):
    vacancies = Vacancy.objects.all()
@@ -16,3 +21,41 @@ def vacancy_list(request):
    
    return render(request, 'employee/index.html',{'vacancies': vacancies,
                                                  'vacancies_json':json.dumps(vacancies_data)})
+   
+   
+@csrf_exempt
+def vacancyinfo(request):
+   if request.method == 'POST':
+      try:
+         data = json.loads(request.body.decode('utf-8'))
+         answer = data.get('answer')
+
+         messages['all'].append(answer)
+
+      except json.JSONDecodeError:
+         return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+      except Exception as e:
+         return JsonResponse({'error': str(e)}, status=500)
+   return render(request, 'employee/index.html')
+   
+@csrf_exempt
+def get_question(request):
+    global messages
+
+    if request.method == 'GET':
+        messages = get_q(messages)
+
+        question = messages['all'][-1]
+        return JsonResponse({'question': str(question)})
+
+@csrf_exempt
+def get_question_first(request):
+    global messages
+
+    if request.method == 'GET':
+        messages = begin()
+        question = messages['all'][-1]
+
+        if 'конец' in str(question).lower():
+            question = 'КОНЕЦ'
+        return JsonResponse({'question': str(question)})
