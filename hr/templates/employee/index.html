@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -44,11 +44,18 @@
         <div class="main-content">
             <div class="vacancy-selection" id="vacancy-selection">
                 <h2>Выберите вакансию</h2>
+                {% comment %} <select class="vacancy-select" id="vacancy-select">
+                    <option value="">-- Не выбрано --</option>
+                    <option value="7">idk</option>
+                </select> {% endcomment %}
+
                 <select class="vacancy-select" id="vacancy-select">
                     <option value="">-- Не выбрано --</option>
-                    <option value="frontend">Frontend разработчик</option>
-                    <option value="backend">Backend разработчик</option>
+                    {% for vacancy in vacancies %}
+                        <option value="{{vacancy.id}}">{{vacancy.title}}</option>
+                    {% endfor %}
                 </select>
+
                 <div class="vacancy-info">
                     <h3 class="vacancy-title" id="vacancy-title">Не выбрано</h3>
                     <div class="vacancy-description" id="vacancy-description">
@@ -75,5 +82,8 @@
 </div>
 
 <script src="{% static 'employee/js/script.js' %}"></script>
+<script>
+    const vacancies = {{ vacancies_json|safe }};
+</script>
 </body>
 </html>

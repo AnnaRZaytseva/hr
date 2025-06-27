@@ -17,50 +17,63 @@ const stepText2 = document.getElementById('step-text2');
 const progressText = document.getElementById('progress-text');
 const button = document.getElementById('button');
 
-// Р”Р°РЅРЅС‹Рµ Рѕ РІР°РєР°РЅСЃРёСЏС… РІСЂРµРјРµРЅРЅРѕ РґР»СЏ С‚РµСЃС‚Р° С„СѓРЅРєС†РёРѕРЅР°Р»Р°
-const vacancies = {
-    'frontend': {
-        title: 'Frontend СЂР°Р·СЂР°Р±РѕС‚С‡РёРє',
-        description: 'РњС‹ РёС‰РµРј С„СЂРѕРЅС‚РµРЅРґ-СЂР°Р·СЂР°Р±РѕС‚С‡РёРєР° СЃ РѕРїС‹С‚РѕРј СЂР°Р±РѕС‚С‹ СЃ React РѕС‚ 2 Р»РµС‚. РћР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РЅР°РІС‹РєРё: JavaScript, React, Redux, HTML/CSS, СЂР°Р±РѕС‚Р° СЃ REST API.',
-        questions: [
-            'Р Р°СЃСЃРєР°Р¶РёС‚Рµ Рѕ СЃРІРѕРµРј РѕРїС‹С‚Рµ СЂР°Р±РѕС‚С‹ СЃ React. РљР°РєРёРµ РїСЂРѕРµРєС‚С‹ РІС‹ СЂР°Р·СЂР°Р±Р°С‚С‹РІР°Р»Рё?',
-            'РљР°Рє РІС‹ РѕСЂРіР°РЅРёР·СѓРµС‚Рµ СѓРїСЂР°РІР»РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёРµРј РІ React-РїСЂРёР»РѕР¶РµРЅРёРё?',
-            'РћРїРёС€РёС‚Рµ РїСЂРѕС†РµСЃСЃ РѕРїС‚РёРјРёР·Р°С†РёРё РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё React-РїСЂРёР»РѕР¶РµРЅРёСЏ.']
-    },
-    'backend': {
-        title: 'Backend СЂР°Р·СЂР°Р±РѕС‚С‡РёРє',
-        description: 'РўСЂРµР±СѓРµС‚СЃСЏ Р±СЌРєРµРЅРґ-СЂР°Р·СЂР°Р±РѕС‚С‡РёРє СЃ РѕРїС‹С‚РѕРј СЂР°Р±РѕС‚С‹ СЃ Node.js РѕС‚ 3 Р»РµС‚. Р—РЅР°РЅРёРµ SQL/NoSQL Р±Р°Р· РґР°РЅРЅС‹С…, Docker, РјРёРєСЂРѕСЃРµСЂРІРёСЃРЅРѕР№ Р°СЂС…РёС‚РµРєС‚СѓСЂС‹.',
+// Данные о вакансиях временно для теста функционала
+// const vacancies = {
+//     'frontend': {
+//         title: 'Frontend разработчик',
+//         description: 'Мы ищем фронтенд-разработчика с опытом работы с React от 2 лет. Обязательные навыки: JavaScript, React, Redux, HTML/CSS, работа с REST API.',
+//         questions: [
+//             'Расскажите о своем опыте работы с React. Какие проекты вы разрабатывали?',
+//             'Как вы организуете управление состоянием в React-приложении?',
+//             'Опишите процесс оптимизации производительности React-приложения.']
+//     },
+//     'backend': {
+//         title: 'Backend разработчик',
+//         description: 'Требуется бэкенд-разработчик с опытом работы с Node.js от 3 лет. Знание SQL/NoSQL баз данных, Docker, микросервисной архитектуры.',
 
-    }
-}
+//     }
+// }
 
-
-//РЅР°С‡Р°Р»СЊРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ СЃС‚СЂР°РЅРёС†С‹
+//начальное состояние страницы
 let currentVacancy = null;
 questionContainer.style.opacity =0;
 let currentQuestionIndex = 0;
 let answers = Array(3).fill('');
 
+// let vacancies = {};
 
+// document.addEventListener('DOMContentLoaded', function() {
+//     const select = document.getElementById('vacancy-select');
+//     const descriptionDiv = document.getElementById('vacancy-description');
+    
+//     select.addEventListener('change', function() {
+//         const selectedValue = this.value;
+//         if (selectedValue && vacanciesData[selectedValue]) {
+//             descriptionDiv.innerHTML = vacanciesData[selectedValue].description;
+//         } else {
+//             descriptionDiv.innerHTML = '';
+//         }
+//     });
+// });
 
-//РѕР±СЂР°Р±Р°С‚С‹РІР°СЋ РІС‹Р±РѕСЂ РІР°РєР°РЅСЃРёРё
+//обрабатываю выбор вакансии
 vacancySelect.addEventListener('change', function() {
-    const selectedValue = this.value; //РІС‹Р±СЂР°РЅРЅР°СЏ РІР°РєР°РЅСЃРёСЏ СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ
-    startInterviewBtn.disabled = !selectedValue; //РµСЃР»Рё РЅРµ РІС‹Р±СЂР°РЅР° С‚Рѕ РєРЅРѕРїРєР° РЅРµ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ РЅР°Р¶Р°С‚РёСЏ
+    const selectedValue = this.value; //выбранная вакансия сохраняется
+    startInterviewBtn.disabled = !selectedValue; //если не выбрана то кнопка не доступна для нажатия
 
     if (selectedValue) {
         currentVacancy = selectedValue;
         vacancyTitle.textContent = vacancies[selectedValue].title;
         vacancyDescription.textContent = vacancies[selectedValue].description;
-        //РµСЃР»Рё РІС‹Р±СЂР°РЅР°, С‚Рѕ С‚РµРєСѓС‰Р°СЏ РІР°РєР°РЅСЃРёСЏ=РІС‹Р±СЂР°РЅРЅР°СЏ РІР°РєР°РЅСЃРёСЏ, Р·Р°РіРѕР»РѕРІРєСѓ РІР°РєР°РЅСЃРёРё РїСЂРёСЃРІР°РёРІР°РµС‚СЃСЏ РЅР°Р·РІР°РЅРёРµ РёР· РјР°СЃСЃРёРІР° РІР°РєР°РЅСЃРёР№ Рё РѕРїРёСЃР°РЅРёРµ
+        //если выбрана, то текущая вакансия=выбранная вакансия, заголовку вакансии присваивается название из массива вакансий и описание
         progressFill.style.width = "33%";
         stepNumber1.style.backgroundColor ="#e5937d";
         stepText1.style.fontSize = "20px";
 
 
     } else {
-        vacancyTitle.textContent = 'РќРµ РІС‹Р±СЂР°РЅРѕ';
-        vacancyDescription.textContent = 'РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІС‹Р±РµСЂРёС‚Рµ РІР°РєР°РЅСЃРёСЋ РёР· СЃРїРёСЃРєР° СЃРїСЂР°РІР°, С‡С‚РѕР±С‹ РЅР°С‡Р°С‚СЊ СЃРѕР±РµСЃРµРґРѕРІР°РЅРёРµ.';
+        vacancyTitle.textContent = 'Не выбрано';
+        vacancyDescription.textContent = 'Пожалуйста, выберите вакансию из списка справа, чтобы начать собеседование.';
         progressFill.style.width = "0%";
         stepNumber1.style.backgroundColor ="#9d82f1";
         stepText1.style.fontSize = "18px";
@@ -68,26 +81,26 @@ vacancySelect.addEventListener('change', function() {
 });
 
 
-//РЅР°С‡Р°Р»Рѕ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ
+//начало тестирования
 startInterviewBtn.addEventListener('click', function() {
     if (!vacancies[currentVacancy].questions || vacancies[currentVacancy].questions.length === 0) {
-        alert('Р”Р»СЏ РІС‹Р±СЂР°РЅРЅРѕР№ РІР°РєР°РЅСЃРёРё РЅРµС‚ РІРѕРїСЂРѕСЃРѕРІ');
+        alert('Для выбранной вакансии нет вопросов');
         return;
     }
     vacancySelection.style.display = 'none';
     questionContainer.style.display = 'block';
-    progressText.textContent= 'С€Р°Рі 2 РёР· 3';
+    progressText.textContent= 'шаг 2 из 3';
     progressFill.style.width = "66%";
 
 
 
-    // Р—Р°РіСЂСѓР¶Р°СЋ РїРµСЂРІС‹Р№ РІРѕРїСЂРѕСЃ
+    // Загружаю первый вопрос
     currentQuestionIndex = 0;
     questionText.textContent = vacancies[currentVacancy].questions[currentQuestionIndex];
-    progressQuestions.textContent = `Р’РѕРїСЂРѕСЃ ${currentQuestionIndex + 1} РёР· ${vacancies[currentVacancy].questions.length}`;
+    progressQuestions.textContent = `Вопрос ${currentQuestionIndex + 1} из ${vacancies[currentVacancy].questions.length}`;
 
 
-    // РђРЅРёРјР°С†РёСЏ РїРѕСЏРІР»РµРЅРёСЏ
+    // Анимация появления
     let opacity = 0;
     const interval = setInterval(() => {
         opacity += 0.1;
@@ -116,7 +129,7 @@ prevBtn.addEventListener('click', function(){
         currentQuestionIndex -= 1;
         textarea.value= answers[currentQuestionIndex];
         questionText.textContent = vacancies[currentVacancy].questions[currentQuestionIndex];
-        progressQuestions.textContent = `Р’РѕРїСЂРѕСЃ ${currentQuestionIndex + 1} РёР· ${vacancies[currentVacancy].questions.length}`;
+        progressQuestions.textContent = `Вопрос ${currentQuestionIndex + 1} из ${vacancies[currentVacancy].questions.length}`;
     }
     updateFinishButton();
 });
@@ -127,7 +140,7 @@ nextBtn.addEventListener('click', function(){
         currentQuestionIndex += 1;
         textarea.value= answers[currentQuestionIndex];
         questionText.textContent = vacancies[currentVacancy].questions[currentQuestionIndex];
-        progressQuestions.textContent = `Р’РѕРїСЂРѕСЃ ${currentQuestionIndex + 1} РёР· ${vacancies[currentVacancy].questions.length}`;
+        progressQuestions.textContent = `Вопрос ${currentQuestionIndex + 1} из ${vacancies[currentVacancy].questions.length}`;
     }
     updateFinishButton();
 
