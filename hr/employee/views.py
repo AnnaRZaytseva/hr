@@ -3,4 +3,6 @@ from django.http import HttpResponse
 from django.views import View
 
 def vacancyinfo(request):
-   return render(request, 'employee/index.html')
+   username = request.user.username
+   return render(request, 'employee/index.html', {'username': username})
+
