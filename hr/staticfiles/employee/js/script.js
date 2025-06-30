@@ -1,7 +1,9 @@
 const vacancySelect = document.getElementById('vacancy-select');
 const startInterviewBtn = document.getElementById('start-interview-btn');
+const vacancyList = document.getElementById('vacancy-list');
 const vacancyTitle = document.getElementById('vacancy-title');
 const vacancyDescription = document.getElementById('vacancy-description');
+const vacancyRequirements = document.getElementById('vacancy-requirements');
 const textArea = document.getElementById('answer');
 const questionContainer = document.getElementById('question-container');
 const vacancySelection = document.getElementById('vacancy-selection');
@@ -32,6 +34,7 @@ vacancySelect.addEventListener('change', function() {
         currentVacancy = selectedValue;
         vacancyTitle.textContent = vacancies[selectedValue].title;
         vacancyDescription.textContent = vacancies[selectedValue].description;
+        vacancyRequirements.textContent = vacancies[selectedValue].requirements;
         //если выбрана, то текущая вакансия=выбранная вакансия, заголовку вакансии присваивается название из массива вакансий и описание
         progressFill.style.width = "33%";
         stepNumber1.style.backgroundColor ="#e5937d";
@@ -53,6 +56,9 @@ startInterviewBtn.addEventListener('click', function() {
     //if (!vacancies[currentVacancy].questions || vacancies[currentVacancy].questions.length === 0) {
     //    alert('Для выбранной вакансии нет вопросов');
      //   return;}
+     
+    // selectedVacancyID = vacancyList.value
+
 
     vacancySelection.style.display = 'none';
     questionContainer.style.display = 'block';

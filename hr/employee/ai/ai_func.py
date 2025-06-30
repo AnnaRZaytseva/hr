@@ -2,6 +2,8 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_gigachat.chat_models import GigaChat
 import json
 import os
+import psycopg2
+import sqlite3
 
 giga = GigaChat(
     credentials="M2Y3YmE2NTEtMTg1Zi00ZjY4LWEwOGMtYjE0ZjlhMDQ2OTYwOmE2ZDU2NmNkLTNmMTgtNDJmYi05NGU0LTc1ZDRjYjBkMmNkZg==",
@@ -15,11 +17,70 @@ file_path = os.path.join(current_dir)
 with open(file_path + '/systemprompt.txt', 'r', encoding='utf-8') as f:
     system_message = f.read()
 
-with open(file_path + '/info.txt', 'r', encoding='utf-8') as f:
-    vacancy_info = f.read()
+# with open(file_path + '/info.txt', 'r', encoding='utf-8') as f:
+#     vacancy_info = f.read()
 
 with open(file_path + '/resume.txt', 'r', encoding='utf-8') as f:
     resume = f.read()
+    
+
+
+def get_vacancy_info(vacancy_id):
+    """Получает данные вакансии из БД по ID"""
+    try:
+        # Подключение к БД (укажите свои параметры подключения)
+        DB_NAME = "ai_hr_database"
+        DB_HOST = "127.0.0.1"
+        DB_USER = "postgres"
+        DB_PASSWORD = "33772"
+        DB_PORT = "5432"
+        
+        # conn = sqlite3.connect('your_database.db')  
+        
+        conn = psycopg2.connect(dbname=DB_NAME,
+                                host=DB_HOST,
+                                user=DB_USER,
+                                password=DB_PASSWORD,
+                                port=DB_PORT)
+        
+        cursor = conn.cursor()
+        
+        # Выполнение запроса
+        cursor.execute("""
+            SELECT title, description, requirements, responsibilities, conditions
+            FROM employee_vacancy 
+            WHERE id = %s     
+        """, (vacancy_id,))    # для postgre %s   |   для sqlite ?
+        
+        # Получение результатов
+        result = cursor.fetchone()
+        
+        if not result:
+            raise ValueError(f"Вакансия с ID {vacancy_id} не найдена")
+        
+        result = ("Описаниеи вакансии: "+result[0]+
+                  "\n\nТребования к кандидату: "+result[1]+
+                  "\n\nОбязанности кандидата: "+result[2]+
+                  "\n\nУсловия для кандидата: "+result[3])
+        
+        return result
+        
+        # return {
+        #     'description': result[0],
+        #     'requirements': result[1],
+        #     'responsibilities': result[2],
+        #     'conditions': result[3]
+        # }
+        
+    except Exception as e:
+        print(f"Ошибка при получении данных вакансии: {e}")
+        raise
+    finally:
+        conn.close()
+        
+        
+
+
 
 def get_q(messages):
 
@@ -34,6 +95,9 @@ def get_q(messages):
     return messages
 
 ## Функция проведения собеседования
+vacancy_info = get_vacancy_info(15)
+# print(vacancy_info)
+
 def begin():
     messages = {
         'all': [SystemMessage(content=system_message), ]

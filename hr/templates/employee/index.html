@@ -47,7 +47,7 @@
         <div class="main-content">
             <div class="vacancy-selection" id="vacancy-selection">
                 <h2>Выберите вакансию</h2>
-
+                {% comment %} <form id="vacancy-list"> {% endcomment %}
                 <select class="vacancy-select" id="vacancy-select">
                     <option value="">-- Не выбрано --</option>
                     {% for vacancy in vacancies %}
@@ -60,8 +60,12 @@
                     <div class="vacancy-description" id="vacancy-description">
                         Пожалуйста, выберите вакансию из списка справа, чтобы начать собеседование.
                     </div>
+                    <div class="vacancy-description" id="vacancy-requirements">
+                        
+                    </div>
                 </div>
                 <button class="start-interview-btn" id="start-interview-btn" disabled>Начать собеседование</button>
+            {% comment %} </form> {% endcomment %}
             </div>
             <div class="question-container" id="question-container">
                 <div class="progress-questions" id="progress-questions">Вопрос 1</div>
