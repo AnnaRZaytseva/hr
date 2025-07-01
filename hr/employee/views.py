@@ -38,25 +38,25 @@ def vacancy_list(request):
    
 @csrf_exempt
 def vacancyinfo(request):
-    # Получаем имя пользователя (если авторизован)
-    username = request.user.username if request.user.is_authenticated else None
+    # # Получаем полное имя (если пользователь авторизован)
+    # if request.user.is_authenticated:
+    #     full_name = f"{request.user.first_name} {request.user.last_name}".strip()
+    #     if not full_name:  # Если имя и фамилия не указаны
+    #         full_name = request.user.username  # Используем логин как fallback
+    #         print(full_name)
+    # else:
+    #     full_name = None
 
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
             answer = data.get('answer')
-            
-            # Здесь ваша логика обработки POST-запроса
-            messages['all'].append(answer)  # (предполагается, что messages где-то определено)
-            
+            messages['all'].append(answer)
             return JsonResponse({'status': 'success'})
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-    # Возвращаем HTML только для GET-запросов
-    return render(request, 'employee/index.html', {'user': username})
+    return render(request, 'employee/index.html')
    
 @csrf_exempt
 def get_question(request):
@@ -79,3 +79,23 @@ def get_question_first(request):
         if 'конец' in str(question).lower():
             question = 'КОНЕЦ'
         return JsonResponse({'question': str(question)})
+    
+    
+@csrf_exempt
+def hr_profile(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            answer = data.get('answer')
+            
+            # Здесь ваша логика обработки POST-запроса
+            messages['all'].append(answer)  # (предполагается, что messages где-то определено)
+            
+            return JsonResponse({'status': 'success'})
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    # Возвращаем HTML только для GET-запросов
+    return render(request, 'employee/hr_ui.html')

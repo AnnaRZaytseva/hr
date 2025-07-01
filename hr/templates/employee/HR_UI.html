@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href={% static 'employee/css/HR_UI.css' %}>
+  <title>Dashboard</title>
+</head>
+<body>
+<div class="container">
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logoimg">AI</div>
+      <div class="logotext"> HR Assistant</div>
+    </div>
+    <ul>
+      <li id="item1">Главная</li>
+      <li id="item3">Список вакансий</li>
+      <li id="item2">Добавить вакансию</li>
+    </ul>
+  </div>
+  <div class="main-content" id="main-content">
+    <div class="header" id="header">
+      <div>
+        <h2 id="main-text">Здравствуйте, {{user.get_full_name}}</h2>
+        <p id="sub-text">Добро пожаловать в личный кабинет</p>
+      </div>
+      <div>
+        <button class="logout" id="logout">Выход</button>
+      </div>
+    </div>
+    <div class="cards" id="cards">
+      <div class="card">Это тоже пока без понятия для чего<span>ааааааа</span></div>
+      <div class="stat">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-text">Открытые вакансии<span>5</span></div>
+            <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <rect width="64" height="64" fill="transparent"/>
+              <rect x="8"  y="32" width="8" height="24" fill="white" rx="1"/>
+              <rect x="20" y="16" width="8" height="40" fill="white" rx="1"/>
+              <rect x="32" y="24" width="8" height="32" fill="white" rx="1"/>
+              <rect x="44" y="8"  width="8" height="48" fill="white" rx="1"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <div class="card-text">Пройдено собеседований<span>45</span></div>
+            <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <rect width="64" height="64" fill="transparent"/>
+              <rect x="8"  y="32" width="8" height="24" fill="white" rx="1"/>
+              <rect x="20" y="16" width="8" height="40" fill="white" rx="1"/>
+              <rect x="32" y="24" width="8" height="32" fill="white" rx="1"/>
+              <rect x="44" y="8"  width="8" height="48" fill="white" rx="1"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="progress">
+        <p>Статистика</p>
+        <div class="progress-container">
+          <svg class="progress-circle" width="220" height="220" viewBox="0 0 120 120">
+            <defs>
+              <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#9d82f1"/>
+                <stop offset="100%" stop-color="#e5937d"/>
+              </linearGradient>
+            </defs>
+            <circle class="progress-bg" cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+            <circle class="progress-fill" cx="60" cy="60" r="50" fill="none" stroke="url(#progressGradient)"
+                    stroke-width="10" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"/>
+            <text class="progress-text" x="60" y="68" font-family="Arial" font-size="24" font-weight="bold"
+                  text-anchor="middle" fill="#1f2937">0%</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="activities" id="activities">
+      <h3>Недавняя активность</h3>
+      <p>Что то тут будет</p>
+      <p>тут тоже</p>
+    </div>
+    <div class="form-container" id="form-container" style="display: none;">
+      <form id="vacancyForm">
+        <div class="form-group">
+          <label for="title">Название вакансии:</label>
+          <input type="text" id="title" name="title" required placeholder="Например: Frontend-разработчик">
+        </div>
+        <div class="form-group">
+          <label for="description">Описание вакансии:</label>
+          <textarea id="description" name="description" required></textarea>
+          <label for="requirements">Основные требования:</label>
+          <textarea id="requirements" name="requirements" required></textarea>
+          <label for="responsibilities">Обязанности:</label>
+          <textarea id="responsibilities" name="responsibilities" required></textarea>
+          <label for="conditions">Условия:</label>
+          <textarea id="conditions" name="conditions" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Опубликовать вакансию</button>
+        <button type="reset" class="reset" id="reset1">Отмена</button>
+      </form>
+    </div>
+    <div class="vacancies" id="vacancies">
+      <div class="search-bar" id="search-bar">
+        <input type="text" id="searchVacancy" placeholder="Поиск по вакансиям...">
+        <button class="search" id="search">Найти</button>
+      </div>
+      <div class="vacancies-list" id="vacancies-list">
+      </div>
+    </div>
+
+
+    <div class="form-container" id="form-container1" style="display: none;">
+      <form id="addvacancyForm">
+        <div class="form-group">
+          <label for="title">Название вакансии:</label>
+          <input type="text" id="title1" name="title" required placeholder="Например: Frontend-разработчик">
+        </div>
+        <div class="form-group">
+          <label for="description">Описание вакансии:</label>
+          <textarea id="description1" name="description" required></textarea>
+          <label for="requirements">Основные требования:</label>
+          <textarea id="requirements1" name="requirements" required></textarea>
+          <label for="responsibilities">Обязанности:</label>
+          <textarea id="responsibilities1" name="responsibilities" required></textarea>
+          <label for="conditions">Условия:</label>
+          <textarea id="conditions1" name="conditions" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Опубликовать вакансию</button>
+        <button type="reset" class="reset" id="reset2">Отмена</button>
+      </form>
+    </div>
+  </div>
+
+
+</div>
+
+<script src={% static 'employee/js/HR_Script.js' %}></script>
+</body>
+</html>
