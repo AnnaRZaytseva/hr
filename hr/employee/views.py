@@ -38,20 +38,25 @@ def vacancy_list(request):
    
 @csrf_exempt
 def vacancyinfo(request):
-   username = request.user.username
-   return render(request, 'employee/index.html', {'username': username})
-   if request.method == 'POST':
-      try:
-         data = json.loads(request.body.decode('utf-8'))
-         answer = data.get('answer')
+    # Получаем имя пользователя (если авторизован)
+    username = request.user.username if request.user.is_authenticated else None
 
-         messages['all'].append(answer)
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            answer = data.get('answer')
+            
+            # Здесь ваша логика обработки POST-запроса
+            messages['all'].append(answer)  # (предполагается, что messages где-то определено)
+            
+            return JsonResponse({'status': 'success'})
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
-      except json.JSONDecodeError:
-         return JsonResponse({'error': 'Invalid JSON format'}, status=400)
-      except Exception as e:
-         return JsonResponse({'error': str(e)}, status=500)
-   return render(request, 'employee/index.html')
+    # Возвращаем HTML только для GET-запросов
+    return render(request, 'employee/index.html', {'user': username})
    
 @csrf_exempt
 def get_question(request):

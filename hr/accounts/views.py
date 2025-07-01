@@ -11,8 +11,11 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
+from django.views.decorators.csrf import csrf_exempt
 from .forms import UserRegistrationForm
 
+
+@csrf_exempt
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -23,12 +26,14 @@ def user_login(request):
             return redirect('home')
     else:
         return render(request, 'registration/login.html')
-
+    
+@csrf_exempt
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
     return render(request, 'registration/logout.html')
 
+@csrf_exempt
 def register(request):
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST)
