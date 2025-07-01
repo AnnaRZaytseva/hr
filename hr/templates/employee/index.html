@@ -14,7 +14,7 @@
             <div class="logoimg">AI</div>
             <div class="logotext"> HR Assistant</div>
 
-            <div> {{user.get_full_name}} </div>
+            <div id='username'> {{user.get_full_name}} </div>
 
         </div>
         <div><button class="logout">Выход</button></div>
@@ -86,9 +86,9 @@
     </div>
 </div>
 
-<script src="{% static 'employee/js/script.js' %}"></script>
 <script>
 const vacancies = {{ vacancies_json|safe }};
 </script>
+<script src="{% static 'employee/js/script.js' %}"></script>
 </body>
 </html>

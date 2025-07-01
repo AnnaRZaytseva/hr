@@ -19,28 +19,28 @@ const mainContent = document.getElementById('main-content');
 const submitBtn = form.querySelector('.submit-btn');
 const addform = document.getElementById('addvacancyForm');
 
-const Vacancies = [
-    {
-      id: 1,
-      title: 'Frontend-разработчик',
-      description: 'Разработка пользовательских интерфейсов для веб-приложений.',
-      requirements: 'Опыт работы с React, JavaScript, HTML/CSS. Понимание принципов REST API.',
-      responsibilities: 'Разработка новых компонентов. Оптимизация производительности. Участие в код-ревью.',
-      conditions: 'Гибкий график. Удаленная работа. Медицинская страховка.',
-      interviews: 12,
-      isActive: true
-    },
-    {
-      id: 2,
-      title: 'Backend-разработчик',
-      description: 'Разработка серверной части веб-приложений.',
-      requirements: 'Опыт работы с Python, Django/Flask, PostgreSQL. Знание Docker.',
-      responsibilities: 'Разработка API. Оптимизация запросов к БД. Написание unit-тестов.',
-      conditions: 'Офис в центре города. Гибкий график. Курсы за счет компании.',
-      interviews: 8,
-      isActive: false
-    }
-  ];
+// const Vacancies = [
+//     {
+//       id: 1,
+//       title: 'Frontend-разработчик',
+//       description: 'Разработка пользовательских интерфейсов для веб-приложений.',
+//       requirements: 'Опыт работы с React, JavaScript, HTML/CSS. Понимание принципов REST API.',
+//       responsibilities: 'Разработка новых компонентов. Оптимизация производительности. Участие в код-ревью.',
+//       conditions: 'Гибкий график. Удаленная работа. Медицинская страховка.',
+//       interviews: 12,
+//       isActive: true
+//     },
+//     {
+//       id: 2,
+//       title: 'Backend-разработчик',
+//       description: 'Разработка серверной части веб-приложений.',
+//       requirements: 'Опыт работы с Python, Django/Flask, PostgreSQL. Знание Docker.',
+//       responsibilities: 'Разработка API. Оптимизация запросов к БД. Написание unit-тестов.',
+//       conditions: 'Офис в центре города. Гибкий график. Курсы за счет компании.',
+//       interviews: 8,
+//       isActive: false
+//     }
+//   ];
 
 //начальное состояние
 formContainer.style.display = 'none';
@@ -337,45 +337,40 @@ search.addEventListener('click', function() {
 
 
 //добавление вакансии
-addform.addEventListener('submit', function(e) {
-  e.preventDefault();
+// addform.addEventListener('submit', function(e) {
+//   e.preventDefault();
 
-  const title = this.elements.title1.value;
-  const description = this.elements.description1.value;
-  const requirements = this.elements.requirements1.value;
-  const responsibilities = this.elements.responsibilities1.value;
-  const conditions = this.elements.conditions1.value;
+//   const title = this.elements.title1.value;
+//   const description = this.elements.description1.value;
+//   const requirements = this.elements.requirements1.value;
+//   const responsibilities = this.elements.responsibilities1.value;
+//   const conditions = this.elements.conditions1.value;
 
-  addNewVacancy(this);
-  this.reset();
+//   addNewVacancy(this);
+//   this.reset();
 
-  menuItem3.click();
-  loadVacancies();
-});
+//   menuItem3.click();
+//   loadVacancies();
+// });
 
-function addNewVacancy(form) {
-  const title = form.title1.value;
-  const description = form.description1.value;
-  const requirements = form.requirements1.value;
-  const responsibilities = form.responsibilities1.value;
-  const conditions = form.conditions1.value;
+// function addNewVacancy(form) {
+//   const title = form.title1.value;
+//   const description = form.description1.value;
+//   const requirements = form.requirements1.value;
+//   const responsibilities = form.responsibilities1.value;
+//   const conditions = form.conditions1.value;
 
-  const newVacancy = {
-    id: Vacancies.length > 0 ? Math.max(...Vacancies.map(v => v.id)) + 1 : 1,
-    title,
-    description,
-    requirements,
-    responsibilities,
-    conditions,
-    interviews: 0,
-    isActive: true
-  };
+//   const newVacancy = {
+//     id: Vacancies.length > 0 ? Math.max(...Vacancies.map(v => v.id)) + 1 : 1,
+//     title,
+//     description,
+//     requirements,
+//     responsibilities,
+//     conditions,
+//     interviews: 0,
+//     isActive: true
+//   };
 
-  Vacancies.push(newVacancy);
-  alert('Новая вакансия успешно добавлена!');
-}
-
-
-
-
-
+//   Vacancies.push(newVacancy);
+//   alert('Новая вакансия успешно добавлена!');
+// }

@@ -19,28 +19,28 @@ const mainContent = document.getElementById('main-content');
 const submitBtn = form.querySelector('.submit-btn');
 const addform = document.getElementById('addvacancyForm');
 
-const Vacancies = [
-    {
-      id: 1,
-      title: 'Frontend-разработчик',
-      description: 'Разработка пользовательских интерфейсов для веб-приложений.',
-      requirements: 'Опыт работы с React, JavaScript, HTML/CSS. Понимание принципов REST API.',
-      responsibilities: 'Разработка новых компонентов. Оптимизация производительности. Участие в код-ревью.',
-      conditions: 'Гибкий график. Удаленная работа. Медицинская страховка.',
-      interviews: 12,
-      isActive: true
-    },
-    {
-      id: 2,
-      title: 'Backend-разработчик',
-      description: 'Разработка серверной части веб-приложений.',
-      requirements: 'Опыт работы с Python, Django/Flask, PostgreSQL. Знание Docker.',
-      responsibilities: 'Разработка API. Оптимизация запросов к БД. Написание unit-тестов.',
-      conditions: 'Офис в центре города. Гибкий график. Курсы за счет компании.',
-      interviews: 8,
-      isActive: false
-    }
-  ];
+// const Vacancies = [
+//     {
+//       id: 1,
+//       title: 'Frontend-разработчик',
+//       description: 'Разработка пользовательских интерфейсов для веб-приложений.',
+//       requirements: 'Опыт работы с React, JavaScript, HTML/CSS. Понимание принципов REST API.',
+//       responsibilities: 'Разработка новых компонентов. Оптимизация производительности. Участие в код-ревью.',
+//       conditions: 'Гибкий график. Удаленная работа. Медицинская страховка.',
+//       interviews: 12,
+//       isActive: true
+//     },
+//     {
+//       id: 2,
+//       title: 'Backend-разработчик',
+//       description: 'Разработка серверной части веб-приложений.',
+//       requirements: 'Опыт работы с Python, Django/Flask, PostgreSQL. Знание Docker.',
+//       responsibilities: 'Разработка API. Оптимизация запросов к БД. Написание unit-тестов.',
+//       conditions: 'Офис в центре города. Гибкий график. Курсы за счет компании.',
+//       interviews: 8,
+//       isActive: false
+//     }
+//   ];
 
 //начальное состояние
 formContainer.style.display = 'none';

@@ -12,23 +12,24 @@ class VacancyForm(ModelForm):
         
         widgets = {
             "title":TextInput(attrs={
-                'class':'classname',
-                'placeholder':'Название вакансии'
+                'id':"title1",
+                'name':"title",
+                'placeholder':"Например: Frontend-разработчик"
             }),
             "description":Textarea(attrs={
-                'class':'classname',
-                'placeholder':'Описание'
+                'id':"description1",
+                'name':"description"
             }),
             "requirements":Textarea(attrs={
-                'class':'classname',
-                'placeholder':'Требования'
+                'id':"requirements1",
+                'name':"requirements"
             }),
             "responsibilities":Textarea(attrs={
-                'class':'classname',
-                'placeholder':'Обязанности'
+                'id':"responsibilities1",
+                'name':"responsibilities"
             }),
             "conditions":Textarea(attrs={
-                'class':'classname',
-                'placeholder':'Условия'
+                'id':"conditions1",
+                'name':"conditions"
             })
         }

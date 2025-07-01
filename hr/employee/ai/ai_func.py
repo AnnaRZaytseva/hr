@@ -95,7 +95,7 @@ def get_q(messages):
     return messages
 
 ## Функция проведения собеседования
-vacancy_info = get_vacancy_info(15)
+vacancy_info = get_vacancy_info(16)
 # print(vacancy_info)
 
 def begin():

@@ -7,7 +7,8 @@ class Vacancy(models.Model):
     requirements = models.TextField()
     responsibilities = models.TextField()
     conditions = models.TextField()
-    isActive = models.BooleanField()
+    interviews = models.IntegerField(default=0)
+    isActive = models.BooleanField(default=False)
     
     def _str__(self):
         return self.title
