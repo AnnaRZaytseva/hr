@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.views import View
+from django.views.generic import UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth.decorators import login_required
@@ -24,9 +25,9 @@ messages = {}
 #     form  = VacancyForm()
 #     data = {'form':form}
 #     return render(request, 'employee/form.html', data)
-
+@csrf_exempt
 def vacancy_list(request):
-    vacancies = Vacancy.objects.all()
+    vacancies = Vacancy.objects.filter(isActive=True)
     vacancies_data = {vacancy.id:{'id':vacancy.id,
                                  'title':vacancy.title,
                                  'description':vacancy.description,
@@ -73,17 +74,56 @@ def get_question(request):
         question = messages['all'][-1]
         return JsonResponse({'question': str(question)})
 
+# @csrf_exempt
+# def get_question_first(request):
+#     global messages
+    
+#     if request.method == 'GET':
+#         messages = begin()
+#         question = messages['all'][-1]
+
+#         if 'конец' in str(question).lower():
+#             question = 'КОНЕЦ'
+#         return JsonResponse({'question': str(question)})
+
+# @csrf_exempt
+# def get_question_first(request):
+#     global messages
+    
+#     if request.method == 'POST':
+#         try:
+#             # Получаем ID вакансии из тела запроса
+#             data = json.loads(request.body)
+#             vacancy_id = data.get('vacancy_id')
+            
+#             if not vacancy_id:
+#                 return JsonResponse({'error': 'Vacancy ID not provided'}, status=400)
+            
+#             # Передаем ID в функцию begin()
+#             messages = begin(vacancy_id)
+#             question = messages['all'][-1]
+
+#             if 'конец' in str(question).lower():
+#                 question = 'КОНЕЦ'
+            
+#             return JsonResponse({'question': str(question)})
+        
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=500)
+    
+#     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 @csrf_exempt
 def get_question_first(request):
     global messages
-
-    if request.method == 'GET':
-        messages = begin()
-        question = messages['all'][-1]
-
-        if 'конец' in str(question).lower():
-            question = 'КОНЕЦ'
-        return JsonResponse({'question': str(question)})
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            messages = begin(data['vacancy_id'])
+            return JsonResponse({'question': str(messages['all'][-1])})
+        except:
+            return JsonResponse({'error': 'Invalid request'}, status=400)
+    return JsonResponse({'error': 'POST required'}, status=405)
     
 @login_required
 @csrf_exempt
@@ -117,3 +157,20 @@ def hr_profile(request):
     return render(request, 'employee/hr_ui.html',{'vacancies': vacancies,
                                                  'vacancies_json':json.dumps(vacancies_data),
                                                  'form':form})
+    
+@csrf_exempt  # Временно отключаем CSRF для простоты (в продакшене лучше использовать токены)
+def update_vacancy_status(request):
+    try:
+        data = json.loads(request.body)
+        # print(data)
+        Vacancy.objects.filter(id=data['vacancy_id']).update(isActive=data['is_active'])
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+@csrf_exempt
+def start_interview(request):
+    if request.method == 'POST':
+        vacancy_id = request.POST.get('vacancy_id')
+        return JsonResponse({'question': f'Первый вопрос по вакансии {vacancy_id}'})
+    return JsonResponse({}, status=400)

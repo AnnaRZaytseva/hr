@@ -13,4 +13,9 @@ class Vacancy(models.Model):
     def _str__(self):
         return self.title
     
+    # def get_absolute_url(self):
+    #     return ('/employee/hr_profile/{self.id}')
+    
+    
+
 # Create your models here.

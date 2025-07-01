@@ -19,29 +19,6 @@ const mainContent = document.getElementById('main-content');
 const submitBtn = form.querySelector('.submit-btn');
 const addform = document.getElementById('addvacancyForm');
 
-// const Vacancies = [
-//     {
-//       id: 1,
-//       title: 'Frontend-разработчик',
-//       description: 'Разработка пользовательских интерфейсов для веб-приложений.',
-//       requirements: 'Опыт работы с React, JavaScript, HTML/CSS. Понимание принципов REST API.',
-//       responsibilities: 'Разработка новых компонентов. Оптимизация производительности. Участие в код-ревью.',
-//       conditions: 'Гибкий график. Удаленная работа. Медицинская страховка.',
-//       interviews: 12,
-//       isActive: true
-//     },
-//     {
-//       id: 2,
-//       title: 'Backend-разработчик',
-//       description: 'Разработка серверной части веб-приложений.',
-//       requirements: 'Опыт работы с Python, Django/Flask, PostgreSQL. Знание Docker.',
-//       responsibilities: 'Разработка API. Оптимизация запросов к БД. Написание unit-тестов.',
-//       conditions: 'Офис в центре города. Гибкий график. Курсы за счет компании.',
-//       interviews: 8,
-//       isActive: false
-//     }
-//   ];
-
 //начальное состояние
 formContainer.style.display = 'none';
 vacancies.style.display = 'none';
@@ -226,11 +203,67 @@ vacanciesList.innerHTML = '';
       vacancyContent.classList.toggle('expanded');
     });
 
-    const toggle = vacancyItem.querySelector('input[type="checkbox"]');
-    toggle.addEventListener('change', function() {
-      confirm(`Вакансия ${vacancy.id} теперь ${this.checked ? 'активна' : 'скрыта'}`);
+// const toggle = vacancyItem.querySelector('input[type="checkbox"]');
 
-    });
+// const toggle = vacancyItem.querySelector('input[type="checkbox"]');
+// toggle.addEventListener('change', function() {
+//   confirm(`Вакансия ${vacancy.id} теперь ${this.checked ? 'активна' : 'скрыта'}`);
+//   const response = await fetch('../employee/hr_profile/update-vacancy-status/', {
+//     method: 'POST',
+//     headers: {'Content-Type': 'application/json'},
+//     body: JSON.stringify({
+//       vacancy_id: vacancy.id  // ID из data-атрибута
+//       is_active: this.checked
+//     })
+
+// });
+
+const toggle = vacancyItem.querySelector('input[type="checkbox"]')
+toggle.addEventListener('change', async (e) => {
+  const response = await fetch('update-vacancy-status/', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      vacancy_id: vacancy.id,  // ID из data-атрибута
+      is_active: e.target.checked
+    })
+  });
+  if (!response.ok) e.target.checked = !e.target.checked;  // Откат при ошибке
+});
+
+// toggle.addEventListener('change', async function() {
+//     const isActive = this.checked;
+    
+//     // if (confirm(`Вакансия ${vacancy.id} теперь ${isActive ? 'активна' : 'скрыта'}`)) {
+//     if (True) {
+//         try {
+//             const response = await fetch('hr_profile/update-vacancy-status/', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify({
+//                     vacancy_id: vacancy.id,  // Замените на реальный ID вакансии
+//                     is_active: isActive
+//                 }),
+//             });
+            
+//             const data = await response.json();
+            
+//             if (data.status === "success") {
+//                 // alert("Статус обновлен!");
+//             } else {
+//                 this.checked = !isActive;  // Откат, если ошибка
+//                 alert("Ошибка: " + (data.message || "Неизвестная ошибка"));
+//             }
+//         } catch (error) {
+//             this.checked = !isActive;
+//             alert("Ошибка сети: " + error);
+//         }
+//     } else {
+//         this.checked = !isActive;  // Отмена действия
+//     }
+// });
 
     document.querySelectorAll('.edit-btn').forEach(button => {
         button.addEventListener('click', function() {
@@ -334,48 +367,3 @@ search.addEventListener('click', function() {
     }
   });
 });
-
-
-//добавление вакансии
-addform.addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const title = this.elements.title1.value;
-  const description = this.elements.description1.value;
-  const requirements = this.elements.requirements1.value;
-  const responsibilities = this.elements.responsibilities1.value;
-  const conditions = this.elements.conditions1.value;
-
-  addNewVacancy(this);
-  this.reset();
-
-  menuItem3.click();
-  loadVacancies();
-});
-
-function addNewVacancy(form) {
-  const title = form.title1.value;
-  const description = form.description1.value;
-  const requirements = form.requirements1.value;
-  const responsibilities = form.responsibilities1.value;
-  const conditions = form.conditions1.value;
-
-  const newVacancy = {
-    id: Vacancies.length > 0 ? Math.max(...Vacancies.map(v => v.id)) + 1 : 1,
-    title,
-    description,
-    requirements,
-    responsibilities,
-    conditions,
-    interviews: 0,
-    isActive: true
-  };
-
-  Vacancies.push(newVacancy);
-  alert('Новая вакансия успешно добавлена!');
-}
-
-
-
-
-

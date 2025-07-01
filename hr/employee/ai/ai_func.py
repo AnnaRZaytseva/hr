@@ -86,19 +86,24 @@ def get_q(messages):
 
     answer = messages['all'][-1]
     question = messages['all'][-2]
-
+    # vacancy_info = get_vacancy_info(id)
+    
     res = giga.invoke(messages['all'])
     messages['all'].append(res.content)
-    messages[question] = answer
-
+    messages[str(question)] = answer
+    # print("###\n###\n###\n###")
+    # print(messages)
+    # print("###\n###\n###\n###")
 
     return messages
 
 ## Функция проведения собеседования
-vacancy_info = get_vacancy_info(16)
+# vacancy_info = get_vacancy_info(16)
 # print(vacancy_info)
 
-def begin():
+def begin(vacancy_id):
+    vacancy_info = get_vacancy_info(vacancy_id)
+    
     messages = {
         'all': [SystemMessage(content=system_message), ]
     }
