@@ -13,9 +13,7 @@
         <div class="logo">
             <div class="logoimg">AI</div>
             <div class="logotext"> HR Assistant</div>
-            <div> {{username}} </div>
-
-            {% comment %} <div> {{username}} </div> {% endcomment %}
+            <div id='username'> {{user.get_full_name}} </div>
 
         </div>
         <div><button class="logout">Выход</button></div>
@@ -48,7 +46,7 @@
         <div class="main-content">
             <div class="vacancy-selection" id="vacancy-selection">
                 <h2>Выберите вакансию</h2>
-
+                {% comment %} <form id="vacancy-list"> {% endcomment %}
                 <select class="vacancy-select" id="vacancy-select">
                     <option value="">-- Не выбрано --</option>
                     {% for vacancy in vacancies %}
@@ -61,8 +59,12 @@
                     <div class="vacancy-description" id="vacancy-description">
                         Пожалуйста, выберите вакансию из списка справа, чтобы начать собеседование.
                     </div>
+                    <div class="vacancy-description" id="vacancy-requirements">
+                        
+                    </div>
                 </div>
                 <button class="start-interview-btn" id="start-interview-btn" disabled>Начать собеседование</button>
+            {% comment %} </form> {% endcomment %}
             </div>
             <div class="question-container" id="question-container">
                 <div class="progress-questions" id="progress-questions">Вопрос 1</div>
@@ -83,9 +85,9 @@
     </div>
 </div>
 
-<script src="{% static 'employee/js/script.js' %}"></script>
 <script>
     const vacancies = {{ vacancies_json|safe }};
 </script>
+<script src="{% static 'employee/js/script.js' %}"></script>
 </body>
 </html>

@@ -1,7 +1,9 @@
 const vacancySelect = document.getElementById('vacancy-select');
 const startInterviewBtn = document.getElementById('start-interview-btn');
+const vacancyList = document.getElementById('vacancy-list');
 const vacancyTitle = document.getElementById('vacancy-title');
 const vacancyDescription = document.getElementById('vacancy-description');
+const vacancyRequirements = document.getElementById('vacancy-requirements');
 const textArea = document.getElementById('answer');
 const questionContainer = document.getElementById('question-container');
 const vacancySelection = document.getElementById('vacancy-selection');
@@ -32,6 +34,7 @@ vacancySelect.addEventListener('change', function() {
         currentVacancy = selectedValue;
         vacancyTitle.textContent = vacancies[selectedValue].title;
         vacancyDescription.textContent = vacancies[selectedValue].description;
+        vacancyRequirements.textContent = vacancies[selectedValue].requirements;
         //если выбрана, то текущая вакансия=выбранная вакансия, заголовку вакансии присваивается название из массива вакансий и описание
         progressFill.style.width = "33%";
         stepNumber1.style.backgroundColor ="#e5937d";
@@ -50,28 +53,38 @@ vacancySelect.addEventListener('change', function() {
 
 //начало тестирования
 startInterviewBtn.addEventListener('click', function() {
-    //if (!vacancies[currentVacancy].questions || vacancies[currentVacancy].questions.length === 0) {
-    //    alert('Для выбранной вакансии нет вопросов');
-     //   return;}
+    if (!currentVacancy) return alert('Выберите вакансию');
+    fetch('getq_first/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({vacancy_id: currentVacancy})
+        
+    })
+    .then(r => r.json())
+    .then(data => questionText.textContent = data.question || data.error)
+    .catch(e => console.error(e));
+
 
     vacancySelection.style.display = 'none';
     questionContainer.style.display = 'block';
     progressText.textContent= 'шаг 2 из 3';
     progressFill.style.width = "66%";
 
-    fetch('/employee/getq_first/') // Замените на ваш URL для получения вопроса
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            questionText.textContent = data.question;
-        })
-            .catch(error => {
-                console.error('Error fetching initial question:', error);
-        });
+    // fetch('/employee/getq_first/', { // Замените на ваш URL для получения вопроса
+    //         method: 'POST',
+    //         headers: {'Content-Type': 'application/json'},
+    //         body: JSON.stringify({vacancy_id: currentVacancy})
+    //     })
+    //     .then(res => res.json())
+    //     .then(data => {
+    //         questionText.textContent = data.question || 'Начинаем собеседование';
+    //         questionContainer.style.opacity = 1;
+    //     })
+    //     .catch(err => {
+    //         console.error(err);
+    //         vacancySelection.style.display = 'block';
+    //         questionContainer.style.display = 'none';
+    //     });
 
     currentQuestionIndex = 0;
 
@@ -117,7 +130,7 @@ nextBtn.addEventListener('click', function() {
     .then(data => {
 
         if (data.success) {
-            return fetch('/employee/getq/');
+            return fetch('getq/');
         } else {
             console.error("Ошибка сервера при обработке ответа:", data);
             throw new Error("Ошибка сервера при обработке ответа"); //  Перебрасываем ошибку для обработки в .catch
@@ -136,7 +149,7 @@ nextBtn.addEventListener('click', function() {
         console.error('Произошла ошибка:', error);
 });
 
-    fetch('/employee/getq/')
+    fetch('getq/')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
