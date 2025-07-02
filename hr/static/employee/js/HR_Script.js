@@ -72,7 +72,6 @@ const inputs = form.querySelectorAll('input, textarea');
   });
 }
 
-
 menuItem1.addEventListener('click', function() {
 returnHomePage();
 });
@@ -84,8 +83,6 @@ hideForm();
 formContainer1.style.display = 'block';
 mainText.textContent = 'Добавить новую вакансию';
 subText.textContent = 'Пожалуйста, заполните поля ниже';
-
-
 
 let opacity = 0;
   const interval = setInterval(() => {
@@ -124,7 +121,6 @@ clearInterval(interval);
 loadVacancies();
 });
 
-
 function animateProgressCircle(percent, element) {
 const circle = element.querySelector('.progress-fill');
 const text = element.querySelector('.progress-text');
@@ -147,9 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
 const progressCircle = document.querySelector('.progress-circle');
 animateProgressCircle(70, progressCircle.parentElement);
 });
-
-
-
 
 function loadVacancies() {
 vacanciesList.innerHTML = '';
@@ -203,67 +196,18 @@ vacanciesList.innerHTML = '';
       vacancyContent.classList.toggle('expanded');
     });
 
-// const toggle = vacancyItem.querySelector('input[type="checkbox"]');
-
-// const toggle = vacancyItem.querySelector('input[type="checkbox"]');
-// toggle.addEventListener('change', function() {
-//   confirm(`Вакансия ${vacancy.id} теперь ${this.checked ? 'активна' : 'скрыта'}`);
-//   const response = await fetch('../employee/hr_profile/update-vacancy-status/', {
-//     method: 'POST',
-//     headers: {'Content-Type': 'application/json'},
-//     body: JSON.stringify({
-//       vacancy_id: vacancy.id  // ID из data-атрибута
-//       is_active: this.checked
-//     })
-
-// });
-
-const toggle = vacancyItem.querySelector('input[type="checkbox"]')
-toggle.addEventListener('change', async (e) => {
-  const response = await fetch('update-vacancy-status/', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      vacancy_id: vacancy.id,  // ID из data-атрибута
-      is_active: e.target.checked
-    })
-  });
-  if (!response.ok) e.target.checked = !e.target.checked;  // Откат при ошибке
-});
-
-// toggle.addEventListener('change', async function() {
-//     const isActive = this.checked;
-    
-//     // if (confirm(`Вакансия ${vacancy.id} теперь ${isActive ? 'активна' : 'скрыта'}`)) {
-//     if (True) {
-//         try {
-//             const response = await fetch('hr_profile/update-vacancy-status/', {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                 },
-//                 body: JSON.stringify({
-//                     vacancy_id: vacancy.id,  // Замените на реальный ID вакансии
-//                     is_active: isActive
-//                 }),
-//             });
-            
-//             const data = await response.json();
-            
-//             if (data.status === "success") {
-//                 // alert("Статус обновлен!");
-//             } else {
-//                 this.checked = !isActive;  // Откат, если ошибка
-//                 alert("Ошибка: " + (data.message || "Неизвестная ошибка"));
-//             }
-//         } catch (error) {
-//             this.checked = !isActive;
-//             alert("Ошибка сети: " + error);
-//         }
-//     } else {
-//         this.checked = !isActive;  // Отмена действия
-//     }
-// });
+    const toggle = vacancyItem.querySelector('input[type="checkbox"]')
+    toggle.addEventListener('change', async (e) => {
+      const response = await fetch('update-vacancy-status/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          vacancy_id: vacancy.id,  // ID из data-атрибута
+          is_active: e.target.checked
+        })
+      });
+      if (!response.ok) e.target.checked = !e.target.checked;  // Откат при ошибке
+    });
 
     document.querySelectorAll('.edit-btn').forEach(button => {
         button.addEventListener('click', function() {
@@ -273,9 +217,52 @@ toggle.addEventListener('change', async (e) => {
         });
     });
 
-    vacancyItem.querySelector('.delete-btn').addEventListener('click', function() {
-      deleteVacancy(vacancy.id);
+    // vacancyItem.querySelector('.delete-btn').addEventListener('click', function() {
+    //   deleteVacancy(vacancy.id);
+    // });
+
+    // vacancyItem.querySelector('.delete-btn').onclick = async () => {
+    //   if(!confirm('Удалить вакансию?')) return;
+      
+    //   await fetch('delete-vacancy/', {
+    //     method: 'POST',
+    //     headers: {'Content-Type': 'application/json'},
+    //     body: JSON.stringify({
+    //       vacancy_id: vacancy.id
+    //     })
+    //   });
+    // };
+
+const delBtn = vacancyItem.querySelector('.delete-btn');  // Ищем кнопку, а не checkbox
+delBtn.addEventListener('click', async (e) => {
+  e.preventDefault();  // Если кнопка в форме, предотвращаем её отправку
+  console.log(vacancy); // Убедитесь, что объект вакансии загружен
+  console.log(vacancy.id);
+  try {
+    const response = await fetch('delete-vacancy/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        vacancy_id: vacancy.id
+      })
     });
+
+    if (!response.ok) {
+      throw new Error('Ошибка при удалении');
+    }
+
+    // Дополнительные действия после успешного удаления
+    console.log("Успешно удалено!");
+    // Например, удаляем элемент из DOM:
+    vacancyItem.remove();
+
+  } catch (error) {
+    console.error("Ошибка:", error);
+    // Можно показать уведомление пользователю
+    alert("Не удалось удалить вакансию");
+  }
+});
+
 
     vacancyItem.querySelector('.report-btn').addEventListener('click', function() {
       showReport(vacancy.id);
@@ -314,7 +301,7 @@ function editVacancy(id) {
       const newForm = form.cloneNode(true);
       form.parentNode.replaceChild(newForm, form);
 
-      newForm.addEventListener('submit', function(e) {
+      newForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const editId = parseInt(this.getAttribute('data-edit-id'));
@@ -330,22 +317,30 @@ function editVacancy(id) {
             conditions: this.conditions.value
           };
 
+          
+          const response = await fetch('update-vacancy/', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                  vacancy_id: id,
+                  title: this.title.value,
+                  description: this.description.value,
+                  requirements: this.requirements.value,
+                  responsibilities: this.responsibilities.value,
+                  conditions: this.conditions.value
+              })
+          });
+          
+          const result = await response.json();
+          console.log('Ответ сервера:', result);
+          
+
           alert('Изменения сохранены!');
           loadVacancies(); // Перезагружаем список
           menuItem3.click(); // Переключаемся на список вакансий
         }
       });
 
-}
-
-
-
-function deleteVacancy(id) {
-  if (confirm('Вы уверены, что хотите удалить эту вакансию?')) {
-    console.log(`Удаление вакансии ${id}`);
-
-    loadVacancies();
-  }
 }
 
 function showReport(id) {

@@ -4,9 +4,10 @@ from django.views import View
 from django.views.generic import UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
+from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from .models import  Vacancy
-from .forms import VacancyForm
+from .forms import VacancyForm, EditVacancyForm
 import json 
 from .ai.ai_func import begin, get_q
 
@@ -36,8 +37,8 @@ def vacancy_list(request):
                                  'conditions':vacancy.conditions,
                                  'isActive':vacancy.isActive}
                                  for vacancy in vacancies}
-    print(vacancies)
-    print(vacancies_data)
+    # print(vacancies)
+    # print(vacancies_data)
     return render(request, 'employee/index.html',{'vacancies': vacancies,
                                                  'vacancies_json':json.dumps(vacancies_data)})
    
@@ -129,12 +130,13 @@ def get_question_first(request):
 @csrf_exempt
 def hr_profile(request):
     if request.method == 'POST':
-      form = VacancyForm(request.POST)
-      if form.is_valid():
-         form.save()
-         return redirect('hr_profile')
+        form = VacancyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('hr_profile')
     else:
         form  = VacancyForm()
+            
     vacancies = Vacancy.objects.only('id',
                                     'title',
                                     'description',
@@ -158,15 +160,45 @@ def hr_profile(request):
                                                  'vacancies_json':json.dumps(vacancies_data),
                                                  'form':form})
     
-@csrf_exempt  # Временно отключаем CSRF для простоты (в продакшене лучше использовать токены)
-def update_vacancy_status(request):
+@csrf_exempt
+def update_vacancy(request):
     try:
         data = json.loads(request.body)
         # print(data)
+        Vacancy.objects.filter(id=data['vacancy_id']).update(title=data['title'],
+                                                            description=data['description'],
+                                                            requirements=data['requirements'],
+                                                            responsibilities=data['responsibilities'],
+                                                            conditions=data['conditions'])
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+    
+@csrf_exempt
+def update_vacancy_status(request):
+    try:
+        data = json.loads(request.body)
+        # id = request.POST.get('vacancy_id')
+        print(data)
         Vacancy.objects.filter(id=data['vacancy_id']).update(isActive=data['is_active'])
         return JsonResponse({'status': 'success'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+# @require_http_methods(["DELETE"])
+@csrf_exempt
+def delete_vacancy(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    try:
+        data = json.loads(request.body)
+        # print(data)
+        vacancy = Vacancy.objects.get(id=data['vacancy_id'])
+        vacancy.delete()
+        return JsonResponse({'status': 'success'}, status=204)
+    except Vacancy.DoesNotExist:
+        return JsonResponse({'error': 'Not found'}, status=404)
     
 @csrf_exempt
 def start_interview(request):

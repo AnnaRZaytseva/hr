@@ -33,3 +33,37 @@ class VacancyForm(ModelForm):
                 'name':"conditions"
             })
         }
+        
+class EditVacancyForm(ModelForm):
+    class Meta:
+        model = Vacancy
+        fields = ['id',
+                  'title',
+                  'description',
+                  'requirements',
+                  'responsibilities',
+                  'conditions']
+        
+        widgets = {
+            "title":TextInput(attrs={
+                'id':"title",
+                'name':"title",
+                'placeholder':"Например: Frontend-разработчик"
+            }),
+            "description":Textarea(attrs={
+                'id':"description",
+                'name':"description"
+            }),
+            "requirements":Textarea(attrs={
+                'id':"requirements",
+                'name':"requirements"
+            }),
+            "responsibilities":Textarea(attrs={
+                'id':"responsibilities",
+                'name':"responsibilities"
+            }),
+            "conditions":Textarea(attrs={
+                'id':"conditions",
+                'name':"conditions"
+            })
+        }
