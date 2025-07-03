@@ -83,7 +83,8 @@
       <p>тут тоже</p>
     </div>
     <div class="form-container" id="form-container" style="display: none;">
-      <form id="vacancyForm">
+      <form id="vacancyForm" method="post" action="update-vacancy/">
+        {% csrf_token %}
         <div class="form-group">
           <label for="title">Название вакансии:</label>
           <input type="text" id="title" name="title" required placeholder="Например: Frontend-разработчик">

@@ -91,9 +91,9 @@ def get_q(messages):
     res = giga.invoke(messages['all'])
     messages['all'].append(res.content)
     messages[str(question)] = answer
-    # print("###\n###\n###\n###")
-    # print(messages)
-    # print("###\n###\n###\n###")
+    print("###\n###\n###\n###")
+    print(messages)
+    print("###\n###\n###\n###")
 
     return messages
 
