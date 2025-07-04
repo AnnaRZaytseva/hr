@@ -7,8 +7,8 @@ from .views import register
 
 urlpatterns = [
     path('login/',LoginView.as_view(), {'template_name': 'registration/login.html'}, name='login'),
-    path('logout/', views.logout_view, name='logout'),
-    path('../employee/vacancyinfo', employee.vacancy_list, name='home'),
+    # path('logout/', views.logout_view, name='logout'),
+    path('../employee/vacancyinfo', employee.vacancyinfo, name='home'),
     path('password-change/', PasswordChangeView.as_view(), name='password_change'),
     path('password-change/done/', PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('password-reset/', PasswordResetView.as_view(), name='password_reset'),

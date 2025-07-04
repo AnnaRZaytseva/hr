@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href={% static 'employee/css/HR_UI.css' %}>
+  <link rel="stylesheet" href={% static 'employer/css/HR_UI.css' %}>
   <title>Dashboard</title>
 </head>
 <body>
@@ -27,7 +27,12 @@
         <p id="sub-text">Добро пожаловать в личный кабинет</p>
       </div>
       <div>
-        <button class="logout" id="logout">Выход</button>
+        <form method="post" action="{% url 'vacancyinfo' %}">
+            <div>
+                {% csrf_token %}
+                <button class="logout" id="logout" style="display: flex;">Выход</button>
+            </div>
+        </form>
       </div>
     </div>
     <div class="cards" id="cards">
@@ -83,7 +88,7 @@
       <p>тут тоже</p>
     </div>
     <div class="form-container" id="form-container" style="display: none;">
-      <form id="vacancyForm" method="post" action="update-vacancy/">
+      <form id="vacancyForm" method="post" action = "update_vacancy/">
         {% csrf_token %}
         <div class="form-group">
           <label for="title">Название вакансии:</label>
@@ -114,26 +119,21 @@
 
 
     <div class="form-container" id="form-container1" style="display: none;">
-      <form id="addvacancyForm" method="post">
+      <form id="addvacancyForm" method="post" action="add-vacancy/">
         {% csrf_token %}
         <div class="form-group">
-          <label for="title">Название вакансии:</label>
-          {% comment %} <input type="text" id="title1" name="title" required placeholder="Например: Frontend-разработчик"> {% endcomment %}
-          {{form.title}}
+         <label for="title">Название вакансии:</label>
+          <input type="text" id="title1" name="title" required placeholder="Например: Frontend-разработчик">
         </div>
         <div class="form-group">
           <label for="description">Описание вакансии:</label>
-          {{form.description}}
-          {% comment %} <textarea id="description1" name="description" required></textarea> {% endcomment %}
+          <textarea id="description1" name="description" required></textarea>
           <label for="requirements">Основные требования:</label>
-          {{form.requirements}}
-          {% comment %} <textarea id="requirements1" name="requirements" required></textarea> {% endcomment %}
+          <textarea id="requirements1" name="requirements" required></textarea>
           <label for="responsibilities">Обязанности:</label>
-          {{form.responsibilities}}
-          {% comment %} <textarea id="responsibilities1" name="responsibilities" required></textarea> {% endcomment %}
+          <textarea id="responsibilities1" name="responsibilities" required></textarea>
           <label for="conditions">Условия:</label>
-          {{form.conditions}}
-          {% comment %} <textarea id="conditions1" name="conditions" required></textarea> {% endcomment %}
+          <textarea id="conditions1" name="conditions" required></textarea>
         </div>
         <button type="submit" class="submit-btn">Опубликовать вакансию</button>
         <button type="reset" class="reset" id="reset2">Отмена</button>
@@ -144,9 +144,10 @@
 
 </div>
 
-<script src={% static 'employee/js/HR_Script.js' %}></script>
+<script src={% static 'employer/js/HR_Script.js' %}></script>
 <script>
-const Vacancies = {{ vacancies_json|safe }};
+  const user_name = "{{user.get_full_name}}";
+  const Vacancies = {{ vacancies_json|safe }};
 </script>
 </body>
 </html>
