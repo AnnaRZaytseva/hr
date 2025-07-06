@@ -86,14 +86,14 @@ WSGI_APPLICATION = "hr.wsgi.application"
 # }
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "ai_hr_database",
-        "USER": "postgres",
-        "PASSWORD": "33772",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
+   "default": {
+       "ENGINE": "django.db.backends.postgresql_psycopg2",
+       "NAME": "ai_hr_database",
+       "USER": "postgres",
+       "PASSWORD": "33772",
+       "HOST": "127.0.0.1",
+       "PORT": "5432",
+   }
 }
 
 
@@ -135,7 +135,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

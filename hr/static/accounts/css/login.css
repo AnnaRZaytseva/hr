@@ -26,7 +26,7 @@ justify-content: center;
 
 .image-cont {
 flex: 1;
-background-image: url('/static/images/registration/login_back.png'); /* Замените на свою картинку */
+background-image: url('back.png'); /* Замените на свою картинку */
 background-size: cover;
 background-position: center;
 }
@@ -84,4 +84,9 @@ font-size: 30px;
 color: #2d3748;
 font-weight: 600;
 margin-bottom: 1rem;
+}
+
+span{
+color: #2d3748;
+font-size: 12px;
 }

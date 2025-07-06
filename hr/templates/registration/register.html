@@ -1,16 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href={% static 'accounts/css/login.css' %}>
+  <title>Title</title>
 </head>
 <body>
-<h1>Create an account</h1>
-<p>Please, sign up using the following form:</p>
-<form action="." method="post">
-  {{ user_form.as_p }}
-  {% csrf_token %}
-  <p><input type="submit" value="Create my account"></p>
+<div class = "container" >
+  <div class="image-cont"></div>
+  <div class="form-cont">
+    <div class="header">Создайте аккаунт</div>
+<form action="http://127.0.0.1:8000/accounts/register/" method="post">
+    <label for="id_username" class="form-label">Имя пользователя:</label>
+    <input type="text" name="username" maxlength="150" required="" aria-describedby="id_username_helptext" id="id_username" class="form-control">
+    <span class="helptext" id="id_username_helptext">Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.</span>
+    <label for="id_first_name" class="form-label">Имя:</label>
+    <input type="text" name="first_name" maxlength="150" id="id_first_name" class="form-control">
+    <label for="id_email" class="form-label">Адрес электронной почты:</label>
+    <input type="email" name="email" maxlength="254" id="id_email" class="form-control">
+    <label for="id_password" class="form-label">Пароль:</label>
+    <input type="password" name="password" required="" id="id_password" class="form-control">
+    <label for="id_password2" class="form-label">Повторите пароль:</label>
+    <input type="password" name="password2" required="" id="id_password2" class="form-control">
+    <input type="hidden" name="csrfmiddlewaretoken" value="AH3lBVstkRr3IqXkwlzTxCi3xnqdJLxMQ23YJ9Kr9yN8IEWV0a2v7mmAMoA3YMA1">
+    <input type="submit" value="Создать аккаунт" class="btn btn-primary">
 </form>
+  </div>
+</div>
 </body>
 </html>
