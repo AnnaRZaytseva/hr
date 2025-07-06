@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href="{% static 'main/main.css' %}" />
+    <title>AI HR Assistant</title>
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logoimg">AI</div>
+                <div class="logotext">HR Assistant</div>
+            </div>
+            <div class="links">
+                <a href="{% url 'login' %}" class="login">Вход</a>
+                <a href="{% url 'register' %}" class="register">Регистрация</a>
+            </div>
+        </div>
+    </div>
+</header>
+<section class="info">
+    <div class="container">
+        <div class="info-content">
+            <h1 class="info-title">AI HR Assistant</h1>
+            <p class="info-subtitle">Искусственный интеллект для автоматизации HR-процессов и проведения эффективных собеседований</p>
+            <p class="info-subtitle">Получи вакансию своей мечты! Наш сервис предоставляет возможность пройти собеседование онлайн. Для этого достаточно зарегистрироваться на сайте и ответить на вопросы, сгенерированные нейросетью.</p>
+            {% if user.is_authenticated %}
+                {% if is_hr %}
+                    <form action="{% url 'hr_profile' %}" method="get">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Начать</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'vacancyinfo' %}" method="get">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Начать</button>
+                    </form>
+            {% endif %}
+            {% else %}
+            <form action="{% url 'login' %}" method="get">
+                {% csrf_token %}
+                <button type="submit" class="btn">Начать</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Ключевые возможности</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9d82f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg></div>
+                <h3 class="feature-title">Автоматизированные собеседования</h3>
+                <p class="feature-text">Проведение собеседований в любое время без участия HR-специалиста</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9d82f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path>
+                    <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
+                </svg></div>
+                <h3 class="feature-title">AI-анализ ответов</h3>
+                <p class="feature-text">Автоматическая оценка кандидатов на основе их ответов и поведения</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9d82f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg></div>
+                <h3 class="feature-title">Быстрый подбор</h3>
+                <p class="feature-text">Сокращение времени найма на 70% с помощью интеллектуальных алгоритмов</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="how-it-works">
+    <div class="container">
+        <h2 class="section-title">Как это работает</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <p class="step-text">Регистрируетесь в системе</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <p class="step-text">Выбираете доступную вакансию</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <p class="step-text">Проходите AI-собеседование</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <p class="step-text">Получаете результаты</p>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,5 +1,5 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -17,7 +17,7 @@
             <div id='username'> {{user.get_full_name}} </div>
 
         </div>
-        <form method="post" action="{% url 'vacancy_list' %}">
+                <form method="post" action="{% url 'vacancyinfo' %}">
             <div>
                 {% csrf_token %}
                 <button type="submit" class="logout">Выход</button>

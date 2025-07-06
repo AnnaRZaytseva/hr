@@ -17,10 +17,4 @@ class Vacancy(models.Model):
         verbose_name = 'Вакансия'
         verbose_name_plural = 'Вакансии'
         ordering = ['-id']
-    
-    # def get_absolute_url(self):
-    #     return ('/employee/hr_profile/{self.id}')
-    
-    
-
-# Create your models here.
+        

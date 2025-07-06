@@ -35,7 +35,7 @@ def get_vacancy_info(vacancy_id):
         DB_PASSWORD = "33772"
         DB_PORT = "5432"
         
-        # conn = sqlite3.connect('your_database.db')  
+        # conn = sqlite3.connect('db.db')  
         
         conn = psycopg2.connect(dbname=DB_NAME,
                                 host=DB_HOST,
