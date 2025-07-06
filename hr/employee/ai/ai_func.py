@@ -39,27 +39,27 @@ def get_vacancy_info(vacancy_id):
     """Получает данные вакансии из БД по ID"""
     try:
         # Подключение к БД (укажите свои параметры подключения)
-        DB_NAME = "ai_hr_database"
-        DB_HOST = "127.0.0.1"
-        DB_USER = "postgres"
-        DB_PASSWORD = "33772"
-        DB_PORT = "5432"
+        #DB_NAME = "ai_hr_database"
+        #DB_HOST = "127.0.0.1"
+        #DB_USER = "postgres"
+        #DB_PASSWORD = "33772"
+        #DB_PORT = "5432"
         
-        # conn = sqlite3.connect('your_database.db')  
+        conn = sqlite3.connect('db.sqlite3')
         
-        conn = psycopg2.connect(dbname=DB_NAME,
-                                host=DB_HOST,
-                                user=DB_USER,
-                                password=DB_PASSWORD,
-                                port=DB_PORT)
-        
+        ##conn = psycopg2.connect(dbname=DB_NAME,
+        #                        host=DB_HOST,
+        #                        user=DB_USER,
+        #                        password=DB_PASSWORD,
+        #                        port=DB_PORT)
+
         cursor = conn.cursor()
         
         # Выполнение запроса
         cursor.execute("""
             SELECT title, description, requirements, responsibilities, conditions
             FROM employee_vacancy 
-            WHERE id = %s     
+            WHERE id = ?     
         """, (vacancy_id,))    # для postgre %s   |   для sqlite ?
         
         # Получение результатов
@@ -68,7 +68,7 @@ def get_vacancy_info(vacancy_id):
         if not result:
             raise ValueError(f"Вакансия с ID {vacancy_id} не найдена")
         
-        result = ("Описаниеи вакансии: "+result[0]+
+        result = ("Описание вакансии: "+result[0]+
                   "\n\nТребования к кандидату: "+result[1]+
                   "\n\nОбязанности кандидата: "+result[2]+
                   "\n\nУсловия для кандидата: "+result[3])

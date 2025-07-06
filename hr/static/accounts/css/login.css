@@ -26,7 +26,7 @@ justify-content: center;
 
 .image-cont {
 flex: 1;
-background-image: url('back.png'); /* Замените на свою картинку */
+background-image: url('/static/images/registration/login_back.png'); /* Замените на свою картинку */
 background-size: cover;
 background-position: center;
 }
