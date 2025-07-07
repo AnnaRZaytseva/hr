@@ -27,7 +27,7 @@
         <p id="sub-text">Добро пожаловать в личный кабинет</p>
       </div>
       <div>
-        <form method="post" action="{% url 'vacancyinfo' %}">
+        <form method="post" action="{% url 'main' %}">
             <div>
                 {% csrf_token %}
                 <button class="logout" id="logout" style="display: flex;">Выход</button>

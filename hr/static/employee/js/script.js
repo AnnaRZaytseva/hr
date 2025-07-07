@@ -24,6 +24,73 @@ let currentVacancy = null;
 questionContainer.style.opacity =0;
 let currentQuestionIndex = 0;
 
+const stepDiv1 = document.getElementById('step1');
+const stepDiv2 = document.getElementById('step2');
+const stepDiv3 = document.getElementById('step3');
+
+// function changeRes(){
+//     if (isMobile()) {
+//         if (currentStep === 1){
+//             stepDiv1.style.display="flex";
+//             stepDiv2.style.display="none";
+//             stepDiv3.style.display="none";
+//         }
+//         else if (currentStep === 2){
+//             stepDiv1.style.display="none";
+//             stepDiv2.style.display="flex";
+//             stepDiv3.style.display="none";
+//         }
+//         else if (currentStep === 3){
+//             stepDiv1.style.display="none";
+//             stepDiv2.style.display="none";
+//             stepDiv3.style.display="flex";
+//         }
+        
+//     }
+// }
+
+let currentStep = 1;
+function isMobile() {
+    return window.matchMedia("(max-width: 767px)").matches;
+}
+
+// document.addEventListener('DOMContentLoaded', function() {
+// changeRes();
+// });
+
+// Создаем наблюдатель за изменением размеров
+const resizeObserver = new ResizeObserver(entries => {
+  for (let entry of entries) {
+    const width = entry.contentRect.width;
+    
+    if (isMobile()) {
+        if (currentStep === 1){
+            stepDiv1.style.display="flex";
+            stepDiv2.style.display="none";
+            stepDiv3.style.display="none";
+        }
+        else if (currentStep === 2){
+            stepDiv1.style.display="none";
+            stepDiv2.style.display="flex";
+            stepDiv3.style.display="none";
+        }
+        else if (currentStep === 3){
+            stepDiv1.style.display="none";
+            stepDiv2.style.display="none";
+            stepDiv3.style.display="flex";
+        }
+    }
+    else {
+        stepDiv1.style.display="flex";
+        stepDiv2.style.display="flex";
+        stepDiv3.style.display="flex";
+    }
+  }
+});
+
+// Начинаем наблюдение за элементом (или за window)
+resizeObserver.observe(document.documentElement);
+
 //обрабатываю выбор вакансии
 vacancySelect.addEventListener('change', function() {
 
@@ -40,13 +107,16 @@ vacancySelect.addEventListener('change', function() {
         stepNumber1.style.backgroundColor ="#e5937d";
         stepText1.style.fontSize = "20px";
 
-
+        currentStep = 1;
+        
     } else {
         vacancyTitle.textContent = 'Не выбрано';
         vacancyDescription.textContent = 'Пожалуйста, выберите вакансию из списка справа, чтобы начать собеседование.';
         progressFill.style.width = "0%";
         stepNumber1.style.backgroundColor ="#9d82f1";
         stepText1.style.fontSize = "18px";
+
+        currentStep = 0;
     }
 });
 
@@ -107,6 +177,9 @@ startInterviewBtn.addEventListener('click', function() {
     stepText2.style.fontSize = "20px";
     stepNumber1.style.backgroundColor ="#9d82f1";
     stepText1.style.fontSize = "18px";
+
+    currentStep = 2;
+    changeRes();
 
 });
 
@@ -189,7 +262,3 @@ textarea.addEventListener('input', function() {
     updateFinishButton();
 });
 */
-
-
-
-
