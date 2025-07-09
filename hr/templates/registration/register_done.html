@@ -1,11 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href={% static 'accounts/css/login.css' %}>
+    <title>Регистрация</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .image-cont {
+            width: 50%;
+            background: url('/static/images/registration/login_back.png') no-repeat center center;
+            background-size: cover;
+        }
+
+        .form-cont {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
+            background-color: #ffffff;
+
+        }
+
+        .header {
+            text-align: center;
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            font-size: 1.2em;
+            color: #555;
+            text-align: center;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: #9F6496;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome {{ new_user.first_name }}!</h1>
-    <p>Your account has been successfully created. Now you can <a href="{% url 'login' %}">log in</a>.</p>
+<div class="container">
+    <div class="image-cont"></div>
+    <div class="form-cont">
+        <div class="header">Добро пожаловать, {{ new_user.first_name }}!</div>
+        <form action="http://127.0.0.1:8000/accounts/register/" method="post">
+            {% csrf_token %}
+            <label class="form-label">Регистрация успешно завершена.
+                <a href="{% url 'login' %}">Войдите</a> в аккаунт по ссылке.
+            </label>
+        </form>
+    </div>
+</div>
 </body>
 </html>
