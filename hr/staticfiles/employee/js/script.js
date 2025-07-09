@@ -18,11 +18,68 @@ const stepNumber2 = document.getElementById('step-number2');
 const stepText2 = document.getElementById('step-text2');
 const progressText = document.getElementById('progress-text');
 const button = document.getElementById('button');
+const stepDiv1 = document.getElementById('step1');
+const stepDiv2 = document.getElementById('step2');
+const stepDiv3 = document.getElementById('step3');
+
 
 //начальное состояние страницы
 let currentVacancy = null;
 questionContainer.style.opacity =0;
 let currentQuestionIndex = 0;
+
+// function updateInterviewState() {
+//     fetch('get_interview_state/')
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.status === 'in_progress') {
+//                 vacancySelection.style.display = 'none';
+//                 questionContainer.style.display = 'block';
+//                 nextBtn.disabled = false;
+//             }
+//         });
+// }
+
+// // Вызывать при загрузке страницы и после ключевых действий
+// document.addEventListener('DOMContentLoaded', updateInterviewState);
+
+let currentStep = 1;
+function isMobile() {
+    return window.matchMedia("(max-width: 767px)").matches;
+}
+
+// Создаем наблюдатель за изменением размеров
+const resizeObserver = new ResizeObserver(entries => {
+  for (let entry of entries) {
+    const width = entry.contentRect.width;
+    
+    if (isMobile()) {
+        if (currentStep === 1){
+            stepDiv1.style.display="flex";
+            stepDiv2.style.display="none";
+            stepDiv3.style.display="none";
+        }
+        else if (currentStep === 2){
+            stepDiv1.style.display="none";
+            stepDiv2.style.display="flex";
+            stepDiv3.style.display="none";
+        }
+        else if (currentStep === 3){
+            stepDiv1.style.display="none";
+            stepDiv2.style.display="none";
+            stepDiv3.style.display="flex";
+        }
+    }
+    else {
+        stepDiv1.style.display="flex";
+        stepDiv2.style.display="flex";
+        stepDiv3.style.display="flex";
+    }
+  }
+});
+
+// Начинаем наблюдение за элементом (или за window)
+resizeObserver.observe(document.documentElement);
 
 //обрабатываю выбор вакансии
 vacancySelect.addEventListener('change', function() {
@@ -40,156 +97,107 @@ vacancySelect.addEventListener('change', function() {
         stepNumber1.style.backgroundColor ="#e5937d";
         stepText1.style.fontSize = "20px";
 
-
+        currentStep = 1;
+        
     } else {
         vacancyTitle.textContent = 'Не выбрано';
         vacancyDescription.textContent = 'Пожалуйста, выберите вакансию из списка справа, чтобы начать собеседование.';
         progressFill.style.width = "0%";
         stepNumber1.style.backgroundColor ="#9d82f1";
         stepText1.style.fontSize = "18px";
+
+        currentStep = 0;
     }
 });
 
 
 //начало тестирования
 startInterviewBtn.addEventListener('click', function() {
-    if (!currentVacancy) return alert('Выберите вакансию');
-    fetch('getq_first/', {
+    const selectedVacancy = vacancySelect.value;
+    if (!selectedVacancy) return alert('Выберите вакансию');
+
+    fetch('handle_interview/', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({vacancy_id: currentVacancy})
-        
+        body: JSON.stringify({ vacancy_id: selectedVacancy })
     })
-    .then(r => r.json())
-    .then(data => questionText.textContent = data.question || data.error)
-    .catch(e => console.error(e));
-
-
-    vacancySelection.style.display = 'none';
-    questionContainer.style.display = 'block';
-    progressText.textContent= 'шаг 2 из 3';
-    progressFill.style.width = "66%";
-
-    // fetch('/employee/getq_first/', { // Замените на ваш URL для получения вопроса
-    //         method: 'POST',
-    //         headers: {'Content-Type': 'application/json'},
-    //         body: JSON.stringify({vacancy_id: currentVacancy})
-    //     })
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         questionText.textContent = data.question || 'Начинаем собеседование';
-    //         questionContainer.style.opacity = 1;
-    //     })
-    //     .catch(err => {
-    //         console.error(err);
-    //         vacancySelection.style.display = 'block';
-    //         questionContainer.style.display = 'none';
-    //     });
-
-    currentQuestionIndex = 0;
-
-    /*
-    questionText.textContent = vacancies[currentVacancy].questions[currentQuestionIndex];
-    progressQuestions.textContent = `Вопрос ${currentQuestionIndex + 1} из ${vacancies[currentVacancy].questions.length}`;
-    */
-
-    // Анимация появления
-    let opacity = 0;
-    const interval = setInterval(() => {
-        opacity += 0.1;
-        questionContainer.style.opacity = opacity;
-        if (opacity >= 1) {
-            clearInterval(interval);
-        }
-    }, 10);
-
-    stepNumber2.style.backgroundColor ="#e5937d";
-    stepText2.style.fontSize = "20px";
-    stepNumber1.style.backgroundColor ="#9d82f1";
-    stepText1.style.fontSize = "18px";
-
+    .then(response => {
+        if (!response.ok) throw new Error('Ошибка сети');
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) throw new Error(data.error);
+        
+        // Обновляем UI на основе данных сервера
+        questionText.textContent = data.question;
+        progressQuestions.textContent = `Вопрос ${data.progress.current}`;
+        
+        vacancySelection.style.display = 'none';
+        questionContainer.style.display = 'block';
+        progressText.textContent = 'Шаг 2 из 3';
+        progressFill.style.width = "66%";
+        
+        // Анимация появления
+        questionContainer.style.opacity = 0;
+        let opacity = 0;
+        const interval = setInterval(() => {
+            opacity += 0.1;
+            questionContainer.style.opacity = opacity;
+            if (opacity >= 1) clearInterval(interval);
+        }, 10);
+        
+        stepNumber2.style.backgroundColor = "#e5937d";
+        stepText2.style.fontSize = "20px";
+    })
+    .catch(error => alert('Ошибка: ' + error.message));
 });
 
 nextBtn.addEventListener('click', function() {
+    const answer = textArea.value.trim();
+    if (!answer) return alert('Введите ответ');
 
-    const answer = textArea.value;
-
-    fetch('/employee/vacancyinfo/', {
+    fetch('handle_interview/', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ answer: answer })
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Ошибка при отправке ответа: ' + response.status);
-        }
+        if (!response.ok) throw new Error('Ошибка сети');
         return response.json();
     })
     .then(data => {
+        if (data.error) throw new Error(data.error);
 
-        if (data.success) {
-            return fetch('getq/');
+        if (data.status === 'completed') {
+            // Завершение собеседования
+            questionText.textContent = 'Собеседование завершено!';
+            textArea.style.display = 'none';
+            nextBtn.style.display = 'none';
+            button.style.display = 'flex';
         } else {
-            console.error("Ошибка сервера при обработке ответа:", data);
-            throw new Error("Ошибка сервера при обработке ответа"); //  Перебрасываем ошибку для обработки в .catch
+            // Продолжаем собеседование
+            questionText.textContent = data.question;
+            textArea.value = '';
+            progressQuestions.textContent = `Вопрос ${data.progress.current} из ${data.progress.total}`;
         }
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Ошибка при получении следующего вопроса: ' + response.status);
-        }
-        return response.json();
+    .catch(error => alert('Ошибка: ' + error.message));
+});
+
+button.addEventListener('click', function() {
+
+
+fetch('end_interview/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}
     })
+    .then(response => response.json())
     .then(data => {
-        textArea.value = '';
+        if (data.error) throw new Error(data.error);
+        // showAnalysisResults(data.analysis);
     })
     .catch(error => {
-        console.error('Произошла ошибка:', error);
+        console.error('Analysis error:', error);
+        alert('Analysis failed: ' + error.message);
+    });
 });
-
-    fetch('getq/')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.question == 'КОНЕЦ') {
-                questionText.textContent = 'Собеседование закончено! Мы с вами свяжемся в ближайшее время.';
-                textArea.value = '';
-                nextBtn.disabled = true;
-            } else {
-                questionText.textContent = data.question;
-                textArea.value = '';
-                currentQuestionIndex += 1;
-                progressQuestions.textContent = `Вопрос ${currentQuestionIndex + 1}`;
-    }
-        })
-            .catch(error => {
-                console.error('Error fetching initial question:', error);
-        });
-
-});
-
-/*
-function areAllQuestionsAnswered() {
-    return answers.every(answer => answer.trim() !== '');
-}
-function updateFinishButton() {
-    button.disabled = !areAllQuestionsAnswered();
-}
-*/
-
-/*
-textarea.addEventListener('input', function() {
-    answers[currentQuestionIndex] = textArea.value;
-    updateFinishButton();
-});
-*/
-
-
-
-

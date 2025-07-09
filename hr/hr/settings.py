@@ -52,6 +52,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
+    # 'hr.middleware.RequestResponseLoggerMiddleware',
 ]
 
 ROOT_URLCONF = "hr.urls"
@@ -96,6 +97,7 @@ DATABASES = {
   }
 }
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
