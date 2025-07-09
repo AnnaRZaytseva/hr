@@ -178,7 +178,7 @@ nextBtn.addEventListener('click', function() {
             // Продолжаем собеседование
             questionText.textContent = data.question;
             textArea.value = '';
-            progressQuestions.textContent = `Вопрос ${data.progress.current} из ${data.progress.total}`;
+            progressQuestions.textContent = `Вопрос ${data.progress.current}`;
         }
     })
     .catch(error => alert('Ошибка: ' + error.message));

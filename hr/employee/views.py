@@ -5,7 +5,7 @@ from django.views.generic import UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.http import require_http_methods
-from .models import  Vacancy
+from .models import  Vacancy,InterviewResult
 # from .forms import VacancyForm, EditVacancyForm
 import json 
 import ast
@@ -75,7 +75,6 @@ def handle_interview(request):
     try:
         data = json.loads(request.body.decode('utf-8'))
         session_data = request.session.get('interview_data', {})
-
         # Инициализация нового собеседования
         if 'vacancy_id' in data and not session_data:
             vacancy_id = data['vacancy_id']
@@ -142,23 +141,30 @@ def handle_interview(request):
 @csrf_exempt
 def end_interview(request):
     try:
+        # Проверка аутентификации пользователя
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'Требуется авторизация'}, status=401)
+
         # Получаем данные из сессии
         interview_data = request.session.get('interview_data')
+        
         if not interview_data:
+            del request.session['interview_data']
             return JsonResponse({'error': 'Данные собеседования не найдены'}, status=404)
         
+        # Формируем структурированные данные собеседования
         interview_info = json.dumps({
-                'vacancy': {
-                    'id': interview_data.get('vacancy_id')
-                },
-                'qa_pairs': [
-                    {
-                        'question': q,
-                        'answer': interview_data['answers'].get(q, 'Нет ответа')
-                    }
-                    for q in interview_data['questions']
-                ]
-            })
+            'vacancy': {
+                'id': interview_data.get('vacancy_id')
+            },
+            'qa_pairs': [
+                {
+                    'question': q,
+                    'answer': interview_data['answers'].get(q, 'Нет ответа')
+                }
+                for q in interview_data['questions']
+            ]
+        })
         
         # Отправляем на анализ нейросети
         messages = [
@@ -166,17 +172,39 @@ def end_interview(request):
             HumanMessage(content=interview_info)
         ]
         
-        print(interview_info)
-        
         analysis_result = ast.literal_eval(giga.invoke(messages).content)
-        print(analysis_result)
-        # Сохраняем результат анализа
-        request.session['analysis_result'] = analysis_result
+        
+        # Получаем или создаем объект вакансии
+        try:
+            vacancy = Vacancy.objects.get(id=interview_data['vacancy_id'])
+        except Vacancy.DoesNotExist:
+            return JsonResponse({'error': 'Вакансия не найдена'}, status=404)
+        
+        # Создаем запись в базе данных
+        interview_result = InterviewResult.objects.create(
+            user=request.user,
+            vacancy=vacancy,
+            qa_pairs=[
+                {
+                    'question': q,
+                    'answer': interview_data['answers'].get(q, 'Нет ответа')
+                }
+                for q in interview_data['questions']
+            ],
+            score_percentage=analysis_result[0].rstrip('%'),  # Удаляем символ % если он есть
+            assessment_text=analysis_result[1]
+        )
+        
+        # Очищаем сессию
+        del request.session['interview_data']
         
         return JsonResponse({
             'status': 'success',
-            'analysis': analysis_result
+            'analysis': analysis_result,
+            'interview_id': interview_result.id  # Возвращаем ID созданной записи
         })
         
     except Exception as e:
+        if 'interview_data' in request.session:
+            del request.session['interview_data']
         return JsonResponse({'error': str(e)}, status=500)
