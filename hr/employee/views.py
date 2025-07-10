@@ -5,7 +5,7 @@ from django.views.generic import UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.http import require_http_methods
-from .models import  Vacancy,InterviewResult
+from .models import  Vacancy, InterviewResult
 # from .forms import VacancyForm, EditVacancyForm
 import json 
 import ast
@@ -60,7 +60,7 @@ def begin(vacancy_id):
         if not isinstance(questions, list):
             raise ValueError("Нейросеть не вернула список вопросов")
 
-        print("Сгенерировано вопросов "+ str(len(questions)))
+        # print("Сгенерировано вопросов "+ str(len(questions)))
         
         return questions
         
@@ -81,12 +81,18 @@ def handle_interview(request):
             try:
                 questions = begin(vacancy_id)  # Генерация вопросов
                 
+                vacancy = Vacancy.objects.get(id=vacancy_id)
+                
                 request.session['interview_data'] = {
                     'questions': questions,
                     'answers': {},
                     'current_index': 0,
-                    'vacancy_id': vacancy_id,
-                    'vacancy_title': Vacancy.objects.get(id=vacancy_id).title  # Сохраняем название
+                    'vacancy_id':vacancy.id,
+                    'vacancy_title':vacancy.title,
+                    'vacancy_description':vacancy.description,
+                    'vacancy_requirements':vacancy.requirements,
+                    'vacancy_responsibilities':vacancy.responsibilities,
+                    'vacancy_conditions':vacancy.conditions
                 }
                 session_data = request.session['interview_data']
 
@@ -147,7 +153,7 @@ def end_interview(request):
 
         # Получаем данные из сессии
         interview_data = request.session.get('interview_data')
-        
+        # print(interview_data)
         if not interview_data:
             del request.session['interview_data']
             return JsonResponse({'error': 'Данные собеседования не найдены'}, status=404)
@@ -155,7 +161,14 @@ def end_interview(request):
         # Формируем структурированные данные собеседования
         interview_info = json.dumps({
             'vacancy': {
-                'id': interview_data.get('vacancy_id')
+                'id': interview_data.get('vacancy_id'),
+                'title':interview_data.get('title'),
+                'description':interview_data.get('description'),
+                'requirements':interview_data.get('requirements'),
+                'responsibilities':interview_data.get('responsibilities'),
+                'conditions':interview_data.get('conditions'),
+                'isActive':interview_data.get('isActive')
+
             },
             'qa_pairs': [
                 {

@@ -10,10 +10,9 @@ class Vacancy(models.Model):
     requirements = models.TextField('Требования')
     responsibilities = models.TextField('Обязанности')
     conditions = models.TextField('Условия')
-    interviews = models.IntegerField('Пройдено собеседований',default=0)
     isActive = models.BooleanField('Отображается',default=False)
     
-    def _str__(self):
+    def __str__(self):
         return self.title
     
     class Meta:
@@ -53,8 +52,10 @@ class InterviewResult(models.Model):
     
     score_percentage = models.FloatField(
         verbose_name="Процент результата",
-        default=0,
-        help_text="Процент правильных/хороших ответов (0-100)"
+        default=0.0,
+        help_text="Процент правильных/хороших ответов (0-100)",
+        # max_digits=5,
+        # decimal_places=2
     )
     
     assessment_text = models.TextField(
@@ -73,7 +74,7 @@ class InterviewResult(models.Model):
         verbose_name = "Результат собеседования"
         verbose_name_plural = "Результаты собеседований"
         ordering = ['-created_at']
-        unique_together = ['user', 'vacancy']  # Один результат на пользователя и вакансию
+        # unique_together = ['user', 'vacancy']  # Один результат на пользователя и вакансию
 
     def __str__(self):
         return f"Собеседование {self.user} на {self.vacancy} ({self.score_percentage}%)"

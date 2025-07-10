@@ -60,7 +60,7 @@ function hideList() {
 function resetForm() {
   form.reset();
   form.removeAttribute('data-edit-id');
-  submitBtn.textContent = 'Добавить вакансию';
+  submitBtn.textContent = 'Опубликовать вакансию';
   form.querySelectorAll('input, textarea').forEach(input => input.classList.remove('error'));
 }
 
@@ -103,7 +103,7 @@ menuItem3.addEventListener('click', function () {
 
 document.addEventListener('DOMContentLoaded', () => {
   const progressCircle = document.querySelector('.progress-circle');
-  animateProgressCircle(70, progressCircle.parentElement);
+  animateProgressCircle(Math.round(avg_score_percentage), progressCircle.parentElement);
 });
 
 function animateProgressCircle(percent, element) {

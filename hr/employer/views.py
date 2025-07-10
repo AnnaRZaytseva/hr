@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from django.views import View
-from employee.models import Vacancy
+from django.db.models import Avg, Count
+
+from employee.models import Vacancy, InterviewResult
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import json 
@@ -11,14 +13,17 @@ import json
 @csrf_exempt
 @login_required
 def hr_profile(request):
-    vacancies = Vacancy.objects.only('id',
-                                    'title',
-                                    'description',
-                                    'requirements', 
-                                    'responsibilities',
-                                    'conditions',
-                                    'interviews',
-                                    'isActive')
+    vacancies = Vacancy.objects.annotate(
+        interviews=Count('interview_results')
+    ).only(
+        'id',
+        'title',
+        'description',
+        'requirements', 
+        'responsibilities',
+        'conditions',
+        'isActive'
+    )
     vacancies_data = [{
                         'id': vacancy.id,
                         'title': vacancy.title,
@@ -29,9 +34,17 @@ def hr_profile(request):
                         'interviews': vacancy.interviews,
                         'isActive': vacancy.isActive} 
                       for vacancy in vacancies]
+        
+    general_stat = {'avg_score_percentage':round(InterviewResult.objects.aggregate(avg_score_percentage=Avg('score_percentage'))['avg_score_percentage'], 2),
+                              'completed_count':InterviewResult.objects.aggregate(count=Count(1))['count'],
+                              'active_vacancies_count':Vacancy.objects.filter(isActive = True).aggregate(count=Count(1))['count']}
 
     return render(request, 'employer/hr_ui.html',{'vacancies': vacancies,
-                                                 'vacancies_json':json.dumps(vacancies_data)})
+                                                 'vacancies_json':json.dumps(vacancies_data),
+                                                 'general_stat':general_stat})
+
+    # return render(request, 'employer/hr_ui.html',{'vacancies': vacancies,
+    #                                              'vacancies_json':json.dumps(vacancies_data)})
     
     
 @csrf_exempt

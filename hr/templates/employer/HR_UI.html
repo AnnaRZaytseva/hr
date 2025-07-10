@@ -40,7 +40,7 @@
       <div class="stat">
         <div class="card">
           <div class="card-content">
-            <div class="card-text">Открытые вакансии<span>5</span></div>
+            <div class="card-text">Открытые вакансии<span>{{ general_stat.active_vacancies_count }}</span></div>
             <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
               <rect width="64" height="64" fill="transparent"/>
               <rect x="8"  y="32" width="8" height="24" fill="white" rx="1"/>
@@ -52,7 +52,7 @@
         </div>
         <div class="card">
           <div class="card-content">
-            <div class="card-text">Пройдено собеседований<span>45</span></div>
+            <div class="card-text">Пройдено собеседований<span>{{ general_stat.completed_count }}</span></div>
             <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
               <rect width="64" height="64" fill="transparent"/>
               <rect x="8"  y="32" width="8" height="24" fill="white" rx="1"/>
@@ -77,7 +77,7 @@
             <circle class="progress-fill" cx="60" cy="60" r="50" fill="none" stroke="url(#progressGradient)"
                     stroke-width="10" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"/>
             <text class="progress-text" x="60" y="68" font-family="Arial" font-size="24" font-weight="bold"
-                  text-anchor="middle" fill="#1f2937">0%</text>
+                  text-anchor="middle" fill="#1f2937">{{ general_stat.avg_score_percentage|default:0}}</text>
           </svg>
         </div>
       </div>
@@ -147,6 +147,7 @@
 <script src={% static 'employer/js/HR_Script.js' %}></script>
 <script>
   const user_name = "{{user.get_full_name}}";
+  const avg_score_percentage = parseFloat({{ general_stat.avg_score_percentage|default:70}});
   const Vacancies = {{ vacancies_json|safe }};
 </script>
 </body>

@@ -103,7 +103,7 @@ menuItem3.addEventListener('click', function () {
 
 document.addEventListener('DOMContentLoaded', () => {
   const progressCircle = document.querySelector('.progress-circle');
-  animateProgressCircle(70, progressCircle.parentElement);
+  animateProgressCircle(Math.round(avg_score_percentage), progressCircle.parentElement);
 });
 
 function animateProgressCircle(percent, element) {

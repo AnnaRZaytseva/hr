@@ -28,21 +28,6 @@ let currentVacancy = null;
 questionContainer.style.opacity =0;
 let currentQuestionIndex = 0;
 
-// function updateInterviewState() {
-//     fetch('get_interview_state/')
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.status === 'in_progress') {
-//                 vacancySelection.style.display = 'none';
-//                 questionContainer.style.display = 'block';
-//                 nextBtn.disabled = false;
-//             }
-//         });
-// }
-
-// // Вызывать при загрузке страницы и после ключевых действий
-// document.addEventListener('DOMContentLoaded', updateInterviewState);
-
 let currentStep = 1;
 function isMobile() {
     return window.matchMedia("(max-width: 767px)").matches;
