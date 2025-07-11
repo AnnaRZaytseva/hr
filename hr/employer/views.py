@@ -10,8 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json 
 # Create your views here.
 
-@csrf_exempt
 @login_required
+@csrf_exempt
 def hr_profile(request):
     vacancies = Vacancy.objects.annotate(
         interviews=Count('interview_results')
@@ -137,3 +137,38 @@ def delete_vacancy(request):
         return JsonResponse({'status': 'success'}, status=204)
     except Vacancy.DoesNotExist:
         return JsonResponse({'error': 'Not found'}, status=404)
+    
+    
+@csrf_exempt
+@login_required
+def get_vacancy_report(request):
+    if request.method == 'POST':
+        # print(request.POST)
+        # print("\n\n", request.body)
+        try:
+            data = json.loads(request.body)
+            vacancy_id=data.get('vacancy_id')
+            report_info = InterviewResult.objects.filter(vacancy = vacancy_id)
+
+            formatted_data = [{
+                'id': r.id,
+                'username': r.user.username,
+                'email': r.user.email,
+                'per': f"{r.score_percentage}%",
+                'question': r.qa_pairs[0]['question'] if r.qa_pairs else '',
+                'answer': r.qa_pairs[0]['answer'] if r.qa_pairs else ''
+            } for r in report_info]
+            print(formatted_data)
+
+            return JsonResponse({'report_info':formatted_data})
+            
+            return render(request, 'employer/hr_ui.html',{'report_info':formatted_data})
+            
+            
+            
+            return JsonResponse({'status': 'success', 'id': vacancy_id})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Only POST allowed'}, status=405)
+
+

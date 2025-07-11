@@ -10,12 +10,14 @@ from .models import  Vacancy, InterviewResult
 import json 
 import ast
 # from .ai.ai_func import begin, get_q
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from .GigaChat import giga
 from .constants import SYSTEM_PROMPT, ANALYSIS_SYSTEM_PROMPT
 
+# @login_required
 @csrf_exempt
 def vacancyinfo(request):
        
@@ -213,7 +215,7 @@ def end_interview(request):
         
         return JsonResponse({
             'status': 'success',
-            'analysis': analysis_result,
+            'score_percentage': interview_result.score_percentage,
             'interview_id': interview_result.id  # Возвращаем ID созданной записи
         })
         

@@ -16,6 +16,8 @@ const stepNumber1 = document.getElementById('step-number1');
 const stepText1 = document.getElementById('step-text1');
 const stepNumber2 = document.getElementById('step-number2');
 const stepText2 = document.getElementById('step-text2');
+const stepNumber3 = document.getElementById('step-number3');
+const stepText3 = document.getElementById('step-text3');
 const progressText = document.getElementById('progress-text');
 const button = document.getElementById('button');
 const stepDiv1 = document.getElementById('step1');
@@ -155,10 +157,31 @@ nextBtn.addEventListener('click', function() {
 
         if (data.status === 'completed') {
             // Завершение собеседования
-            questionText.textContent = 'Собеседование завершено!';
+            progressText.textContent = 'Шаг 3 из 3';
+            progressFill.style.width = "100%";
+            stepNumber3.style.backgroundColor ="#e5937d";
+            stepText3.style.fontSize = "20px";
+
+            
             textArea.style.display = 'none';
             nextBtn.style.display = 'none';
+            progressQuestions.style.display = 'none';
             button.style.display = 'flex';
+
+            fetch('end_interview/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) throw new Error(data.error);
+                questionText.innerHTML = `Собеседование завершено. Ваши ответы сохранены, предварительные шансы попадания на очное собеседование - ${data.score_percentage}%.<br>После полной обработки мы свяжемся с вами по email.`;
+            })
+            .catch(error => {
+                console.error('Analysis error:', error);
+                alert('Analysis failed: ' + error.message);
+            });
+
         } else {
             // Продолжаем собеседование
             questionText.textContent = data.question;
@@ -172,17 +195,5 @@ nextBtn.addEventListener('click', function() {
 button.addEventListener('click', function() {
 
 
-fetch('end_interview/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'}
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) throw new Error(data.error);
-        // showAnalysisResults(data.analysis);
-    })
-    .catch(error => {
-        console.error('Analysis error:', error);
-        alert('Analysis failed: ' + error.message);
-    });
+
 });

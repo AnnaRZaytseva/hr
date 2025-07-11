@@ -20,6 +20,7 @@ const form = document.getElementById('vacancyForm');
 const addform = document.getElementById('addvacancyForm');
 const mainContent = document.getElementById('main-content');
 const submitBtn = form.querySelector('.submit-btn');
+const reportList = document.getElementById('report-list');
 
 function returnHomePage() {
   cardsBlock.style.display = 'flex';
@@ -267,8 +268,70 @@ async function editVacancy(id) {
   });
 }
 
-function showReport(id) {
-  alert(`Отчет по вакансии #${id} будет отображен здесь`);
+function showReport(vacancyId) {
+  hideList();
+  reportList.style.display = 'block';
+  mainText.textContent = 'Отчёты';
+  subText.textContent = 'Просмотр результатов собеседований';
+  reportList.innerHTML = '';
+
+  fetch('get-vacancy-report/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ vacancy_id: vacancyId })
+  })
+    .then(response => {
+      if (!response.ok) throw new Error(`Ошибка: ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      if (!data.report_info || data.report_info.length === 0) {
+        reportList.innerHTML = '<div class="no-data">Нет данных по этой вакансии</div>';
+        return;
+      }
+      
+      data.report_info.forEach(user => {
+        const reportItem = document.createElement('div');
+        reportItem.className = 'report-item';
+        reportItem.innerHTML = `
+          <div class="report-header">
+            <div class="report-main">
+              <div class="report-num">${user.id}</div>
+              <div class="report-user">${user.username}</div>
+            </div>
+            <div class="report-stats">
+              <div class="interview-per">${user.per}</div>
+            </div>
+          </div>
+          <div class="report-content">
+            <div class="report-section">
+              <h4>Связь с пользователем</h4>
+              <div class="report-section-content">${user.email}</div>
+            </div>
+            <div class="report-section">
+              <h4>Вопросы</h4>
+              <div class="report-section-content">${user.question}</div>
+            </div>
+            <div class="report-section">
+              <h4>Ответы</h4>
+              <div class="report-section-content">${user.answer}</div>
+            </div>
+          </div>
+        `;
+        
+        const reportHeader = reportItem.querySelector('.report-header');
+        const reportContent = reportItem.querySelector('.report-content');
+        reportHeader.addEventListener('click', () => {
+          reportContent.classList.toggle('expanded');
+        });
+        
+        reportList.appendChild(reportItem);
+      });
+    })
+    .catch(error => {
+      console.error('Ошибка при получении отчета:', error);
+      reportList.innerHTML = `<div class="error">Ошибка загрузки: ${error.message}</div>`;
+    });
 }
 
 search.addEventListener('click', function () {
