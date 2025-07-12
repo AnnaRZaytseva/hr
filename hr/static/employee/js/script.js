@@ -106,7 +106,7 @@ startInterviewBtn.addEventListener('click', function() {
     fetch('handle_interview/', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ vacancy_id: selectedVacancy })
+        body: JSON.stringify({ vacancy_id: selectedVacancy})
     })
     .then(response => {
         if (!response.ok) throw new Error('Ошибка сети');
@@ -115,26 +115,34 @@ startInterviewBtn.addEventListener('click', function() {
     .then(data => {
         if (data.error) throw new Error(data.error);
         
-        // Обновляем UI на основе данных сервера
-        questionText.textContent = data.question;
-        progressQuestions.textContent = `Вопрос ${data.progress.current}`;
-        
-        vacancySelection.style.display = 'none';
-        questionContainer.style.display = 'block';
-        progressText.textContent = 'Шаг 2 из 3';
-        progressFill.style.width = "66%";
-        
-        // Анимация появления
-        questionContainer.style.opacity = 0;
-        let opacity = 0;
-        const interval = setInterval(() => {
-            opacity += 0.1;
-            questionContainer.style.opacity = opacity;
-            if (opacity >= 1) clearInterval(interval);
-        }, 10);
-        
-        stepNumber2.style.backgroundColor = "#e5937d";
-        stepText2.style.fontSize = "20px";
+        if (data.status === 'already passed') {
+            alert('Вы уже проходили данное собеседование');
+        }
+        else{
+
+                    // Обновляем UI на основе данных сервера
+            questionText.textContent = data.question;
+            progressQuestions.textContent = `Вопрос ${data.progress.current}`;
+            
+            vacancySelection.style.display = 'none';
+            questionContainer.style.display = 'block';
+            progressText.textContent = 'Шаг 2 из 3';
+            progressFill.style.width = "66%";
+            
+            // Анимация появления
+            questionContainer.style.opacity = 0;
+            let opacity = 0;
+            const interval = setInterval(() => {
+                opacity += 0.1;
+                questionContainer.style.opacity = opacity;
+                if (opacity >= 1) clearInterval(interval);
+            }, 10);
+            
+            stepNumber2.style.backgroundColor = "#e5937d";
+            stepText2.style.fontSize = "20px";
+        }
+
+
     })
     .catch(error => alert('Ошибка: ' + error.message));
 });

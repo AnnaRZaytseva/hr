@@ -80,6 +80,9 @@ def handle_interview(request):
         # Инициализация нового собеседования
         if 'vacancy_id' in data and not session_data:
             vacancy_id = data['vacancy_id']
+            if InterviewResult.objects.filter(user=request.user, vacancy_id=vacancy_id).exists():
+                return JsonResponse({'status': 'already passed', 'message': 'Пользователь уже проходил собеседование на эту вакансию'})
+            
             try:
                 questions = begin(vacancy_id)  # Генерация вопросов
                 

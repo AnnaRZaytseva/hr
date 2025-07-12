@@ -1,10 +1,98 @@
-body {
+@media (max-width: 768px)
+{
+	body {
+font-family: Arial, sans-serif;
+line-height: 1.6;
+background-color: #f8f8f8;
+min-height: 100vh;
+background-image: url('/static/images/registration/login_back.png')
+}
+span{
+color: #2d3748;
+font-size: 20px;
+}
+.header{
+margin: 0 auto;
+font-size: 20px;
+color: #2d3748;
+font-weight: 600;
+margin-bottom: 1rem;
+}
+.form-label {
+display: block;
+margin-bottom: 0.5rem;
+color: #666;
+font-size: 18px;
+}
+.form-text {
+font-size: 1rem;
+color: #666;
+}
+}
+@media (min-width: 769px) and (max-width: 1023px) {
+	span{
+color: #2d3748;
+font-size: 20px;
+}
+	.form-text {
+font-size: 1rem;
+color: #666;
+}
+span{
+color: #2d3748;
+font-size: 12px;
+}
+	body {
+font-family: Arial, sans-serif;
+line-height: 1.6;
+background-color: #f8f8f8;
+min-height: 100vh;
+background-image: url('/static/images/registration/login_back.png');
+}
+.header{
+margin: 0 auto;
+font-size: 30px;
+color: #2d3748;
+font-weight: 600;
+margin-bottom: 2rem;
+}
+.form-label {
+display: block;
+margin-bottom: 0.5rem;
+color: #666;
+font-size: 22px;
+}
+.image-cont {
+}
+.helptext{
+	font-size:15px;
+}
+}
+@media (min-width: 1024px){
+	.form-text {
+font-size: 0.8rem;
+color: #666;
+}
+	body {
 font-family: Arial, sans-serif;
 line-height: 1.6;
 background-color: #f8f8f8;
 min-height: 100vh;
 }
-
+.header{
+margin: 0 auto;
+font-size: 30px;
+color: #2d3748;
+font-weight: 600;
+margin-bottom: 1rem;
+}
+.image-cont {
+flex: 1;
+background-image: url('/static/images/registration/login_back.png'); /* Замените на свою картинку */
+background-size: cover;
+background-position: center;
+}
+}
 .container {
 border-radius: 20px;
 width: 70%;
@@ -24,13 +112,6 @@ flex-direction: column;
 justify-content: center;
 }
 
-.image-cont {
-flex: 1;
-background-image: url('/static/images/registration/login_back.png'); /* Замените на свою картинку */
-background-size: cover;
-background-position: center;
-}
-
 form{
 width: 55%;
 margin: 0 auto;
@@ -41,7 +122,7 @@ background-image: linear-gradient(to right, #9d82f1, #e5937d);;
 color: white;
 padding: 10px;
 border: none;
-border-radius: 20px;
+border-radius: 5px;
 cursor: pointer;
 width: 100%;
 font-size: 18px;
@@ -62,31 +143,9 @@ outline:none;
 font-size: 16px;
 box-sizing: border-box;
 }
-.form-label {
-display: block;
-margin-bottom: 0.5rem;
-color: #666;
-font-size: 18px;
-}
-.form-text {
-font-size: 0.8rem;
-color: #666;
-}
 a {
 color: #9d82f1;
 text-decoration: none;
 font-weight: 500;
 }
 
-.header{
-margin: 0 auto;
-font-size: 30px;
-color: #2d3748;
-font-weight: 600;
-margin-bottom: 1rem;
-}
-
-span{
-color: #2d3748;
-font-size: 12px;
-}

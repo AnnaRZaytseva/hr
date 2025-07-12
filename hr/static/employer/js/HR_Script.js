@@ -20,6 +20,7 @@ const form = document.getElementById('vacancyForm');
 const addform = document.getElementById('addvacancyForm');
 const mainContent = document.getElementById('main-content');
 const submitBtn = form.querySelector('.submit-btn');
+const reports = document.getElementById('reports');
 const reportList = document.getElementById('report-list');
 
 function returnHomePage() {
@@ -31,6 +32,7 @@ function returnHomePage() {
   hideForm();
   hideForm1();
   hideList();
+  hideReports();
   let opacity = 0;
   const interval = setInterval(() => {
     opacity += 0.1;
@@ -57,6 +59,9 @@ function hideList() {
   vacancies.style.display = 'none';
   searchBar.style.display = 'none';
 }
+function hideReports() {
+  reports.style.display = 'none';
+}
 
 function resetForm() {
   form.reset();
@@ -71,6 +76,7 @@ menuItem2.addEventListener('click', function () {
   hideHomePage();
   hideList();
   hideForm();
+  hideReports();
   formContainer1.style.display = 'block';
   mainText.textContent = 'Добавить новую вакансию';
   subText.textContent = 'Пожалуйста, заполните поля ниже';
@@ -86,6 +92,7 @@ menuItem3.addEventListener('click', function () {
   hideHomePage();
   hideForm();
   hideForm1();
+  hideReports();
   vacancies.style.display = 'block';
   mainText.textContent = 'Список вакансий';
   subText.textContent = 'Управление опубликованными вакансиями';
@@ -224,6 +231,7 @@ async function editVacancy(id) {
   const found = Vacancies.find(v => v.id === id);
   hideHomePage();
   hideList();
+  hideReports();
   formContainer.style.display = 'block';
   mainText.textContent = 'Редактирование вакансии';
   subText.textContent = 'Внесите необходимые изменения';
@@ -270,10 +278,19 @@ async function editVacancy(id) {
 
 function showReport(vacancyId) {
   hideList();
-  reportList.style.display = 'block';
+  reports.style.display = 'block';
   mainText.textContent = 'Отчёты';
-  subText.textContent = 'Просмотр результатов собеседований';
+  // subText.textContent = 'Просмотр результатов собеседований';
   reportList.innerHTML = '';
+
+  let opacity = 0;
+  reports.style.opacity = opacity;
+  const interval = setInterval(() => {
+    opacity += 0.1;
+    reports.style.opacity = opacity;
+    if (opacity >= 1) clearInterval(interval);
+  }, 5);
+
 
   fetch('get-vacancy-report/', {
     method: 'POST',
@@ -293,31 +310,45 @@ function showReport(vacancyId) {
       data.report_info.forEach(user => {
         const reportItem = document.createElement('div');
         reportItem.className = 'report-item';
-        reportItem.innerHTML = `
-          <div class="report-header">
-            <div class="report-main">
-              <div class="report-num">${user.id}</div>
-              <div class="report-user">${user.username}</div>
-            </div>
-            <div class="report-stats">
-              <div class="interview-per">${user.per}</div>
-            </div>
+        subText.textContent = `Просмотр результатов собеседований по вакансии ${user.vacancy_title}`;
+reportItem.innerHTML = `
+  <div class="report-header">
+    <div class="report-main">
+
+      <div class="report-user">${user.fullname}</div>
+    </div>
+    <div class="report-stats">
+      <div class="interview-per">${user.per}</div>
+    </div>
+  </div>
+  <div class="report-content">
+    <div class="report-section">
+      <h4>Связь с пользователем</h4>
+      <div class="report-section-content">${user.email}</div>
+    </div>
+    <div class="report-section">
+      <h4>Заключенеи системы</h4>
+      <div class="report-section-content">${user.ai_result}</div>
+    </div>
+
+    ${user.qa_pairs.map((qa, index) => `
+      <div class="qa-pair">
+        <div class="report-section">
+          <h4>Вопрос ${index + 1}</h4>
+          <div class="report-section-content">
+            ${qa.question}
           </div>
-          <div class="report-content">
-            <div class="report-section">
-              <h4>Связь с пользователем</h4>
-              <div class="report-section-content">${user.email}</div>
-            </div>
-            <div class="report-section">
-              <h4>Вопросы</h4>
-              <div class="report-section-content">${user.question}</div>
-            </div>
-            <div class="report-section">
-              <h4>Ответы</h4>
-              <div class="report-section-content">${user.answer}</div>
-            </div>
+        </div>
+        <div class="report-section">
+          <h4>Ответ</h4>
+          <div class="report-section-content">
+            ${qa.answer}
           </div>
-        `;
+        </div>
+      </div>
+    `).join('')}
+  </div>
+`;
         
         const reportHeader = reportItem.querySelector('.report-header');
         const reportContent = reportItem.querySelector('.report-content');

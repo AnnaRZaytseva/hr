@@ -320,7 +320,7 @@ background-color: #9d82f1;
 color: white;
 }
 
-.vacancies {
+.vacancies, .reports {
 display: none;
 padding: 20px;
 opacity: 0;
@@ -428,7 +428,7 @@ transition: max-height 0.3s ease-out;
 
 .vacancy-content.expanded, .report-content.expanded {
 padding: 20px;
-max-height: 1000px;
+max-height: 4000px;
 }
 
 .vacancy-section, .report-section {

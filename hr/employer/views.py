@@ -148,22 +148,32 @@ def get_vacancy_report(request):
         try:
             data = json.loads(request.body)
             vacancy_id=data.get('vacancy_id')
-            report_info = InterviewResult.objects.filter(vacancy = vacancy_id)
-
-            formatted_data = [{
-                'id': r.id,
-                'username': r.user.username,
-                'email': r.user.email,
-                'per': f"{r.score_percentage}%",
-                'question': r.qa_pairs[0]['question'] if r.qa_pairs else '',
-                'answer': r.qa_pairs[0]['answer'] if r.qa_pairs else ''
-            } for r in report_info]
-            print(formatted_data)
-
-            return JsonResponse({'report_info':formatted_data})
+            # report_info = InterviewResult.objects.filter(vacancy = vacancy_id)
             
-            return render(request, 'employer/hr_ui.html',{'report_info':formatted_data})
             
+            report_info = InterviewResult.objects.filter(vacancy_id=vacancy_id).select_related('vacancy')
+
+            formatted_data = []
+            for result in report_info:  # Итерируемся по каждому объекту
+                qa_list = []
+                for qa in result.qa_pairs:  # Перебираем все Q&A
+                    qa_list.append({
+                        'question': qa.get('question', ''),
+                        'answer': qa.get('answer', '')
+                    })
+                
+                formatted_data.append({
+                    'id': result.id,
+                    'fullname': result.user.get_full_name(),
+                    'email': result.user.email,
+                    'vacancy_title': result.vacancy.title if result.vacancy else '',  # Доступ к vacancy
+                    'per': f"{result.score_percentage}%",
+                    'ai_result':result.assessment_text,
+                    'qa_pairs': qa_list  # Все вопросы и ответы
+                })
+                
+                print(formatted_data)
+                return JsonResponse({'report_info': formatted_data}, safe=False)
             
             
             return JsonResponse({'status': 'success', 'id': vacancy_id})
