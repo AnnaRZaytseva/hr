@@ -8,15 +8,6 @@ def index(request):
     context = {
         'is_hr': is_hr
     }
-    vacancies = Vacancy.objects.filter(isActive=True)
-    vacancies_data = {vacancy.id:{'id':vacancy.id,
-                                  'title':vacancy.title,
-                                  'description':vacancy.description,
-                                  'requirements':vacancy.requirements,
-                                  'responsibilities':vacancy.responsibilities,
-                                  'conditions':vacancy.conditions,
-                                  'isActive':vacancy.isActive}
-                      for vacancy in vacancies}
     if request.method == 'POST':
         logout(request)
         return render(request, 'main/main.html', context)

@@ -106,9 +106,7 @@ startInterviewBtn.addEventListener('click', function() {
     fetch('handle_interview/', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ vacancy_id: selectedVacancy,
-            start:true
-        })
+        body: JSON.stringify({ vacancy_id: selectedVacancy})
     })
     .then(response => {
         if (!response.ok) throw new Error('Ошибка сети');
