@@ -46,6 +46,7 @@ text-decoration: none;
 font-weight: 600;
 transition: transform 0.3s, box-shadow 0.3s;
 }
+
 .header-content {
 display: flex;
 justify-content: space-between;

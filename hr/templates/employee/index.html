@@ -17,11 +17,9 @@
             <div id='username'> {{user.get_full_name}} </div>
 
         </div>
-                <form method="post" action="{% url 'vacancyinfo' %}">
-            <div>
-                {% csrf_token %}
-                <button type="submit" class="logout">Выход</button>
-            </div>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="logout">Выход</button>
         </form>
     </header>
 

@@ -82,11 +82,69 @@
         </div>
       </div>
     </div>
-    <div class="activities" id="activities">
-      <h3>Недавняя активность</h3>
-      <p>Что то тут будет</p>
-      <p>тут тоже</p>
-    </div>
+   <div class="activities" id="activities">
+    <h3>Недавняя активность</h3>
+    {% if general_stat.last_interviews %}
+      <div class="activity-list">
+        {% for interview in general_stat.last_interviews %}
+          <div class="report-item"> <div class="report-header activity-header">
+              <div class="report-main">
+                <strong>{{ interview.vacancy.title }}</strong> — 
+                <span>{{ interview.user.get_full_name|default:interview.user.username }}</span>
+              </div>
+              <div style="font-size: 0.8em; color: #999; margin-top: 10px;">
+                {{ interview.created_at|date:"d.m.Y H:i" }}
+              </div>
+              <div class="report-stats">
+                <b>{{ interview.score_percentage }}%</b>
+              </div>
+            </div>
+
+            <div class="report-content"> <div class="report-section">
+                <h4>Связь с соискателем</h4>
+                <div class="report-section-content">{{ interview.user.email }}</div>
+              </div>
+              
+              <div class="report-section">
+                <h4>Заключение системы</h4>
+                <div class="report-section-content">
+                  {{ interview.assessment_text|default:"Оценка отсутствует" }}
+                </div>
+              </div>
+
+              <div class="report-section">
+                <h4>Детализация ответов</h4>
+                  {% for qa in interview.qa_pairs %}
+                    <div class="qa-pair">
+                      <div class="report-section">
+                        <h4>Вопрос {{ forloop.counter }}</h4>
+                        <div class="report-section-content">
+                          {{ qa.question }}
+                        </div>
+                      </div>
+                      <div class="report-section">
+                        <h4>Ответ</h4>
+                        <div class="report-section-content">
+                          {{ qa.answer }}
+                        </div>
+                      </div>
+                    </div>
+                  {% empty %}
+                    <p>Данные о вопросах отсутствуют.</p>
+                  {% endfor %}
+              </div>
+
+              <div style="font-size: 0.8em; color: #999; margin-top: 10px;">
+                Дата прохождения: {{ interview.created_at|date:"d.m.Y H:i" }}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Собеседований пока не проводилось.</p>
+    {% endif %}
+  </div>
     <div class="form-container" id="form-container" style="display: none;">
       <form id="vacancyForm" method="post" action = "update_vacancy/">
         {% csrf_token %}

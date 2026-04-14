@@ -130,6 +130,27 @@ function animateProgressCircle(percent, element) {
   }, 15);
 }
 
+if (activitiesBlock) {
+    activitiesBlock.addEventListener('click', function(e) {
+        const header = e.target.closest('.report-header');
+        if (!header) return;
+
+        const content = header.nextElementSibling;
+
+        if (content && content.classList.contains('report-content')) {
+            content.classList.toggle('expanded');
+            
+            // Если вы хотите, чтобы при открытии одного закрывались другие:
+            const allContents = activitiesBlock.querySelectorAll('.report-content');
+            allContents.forEach(item => {
+                if (item !== content) {
+                    item.classList.remove('expanded');
+                }
+            });
+        }
+    });
+}
+
 function loadVacancies() {
   vacanciesList.innerHTML = '';
   Vacancies.forEach(vacancy => {
@@ -275,6 +296,7 @@ async function editVacancy(id) {
     }
   });
 }
+
 
 function showReport(vacancyId) {
   hideList();

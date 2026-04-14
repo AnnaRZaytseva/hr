@@ -37,7 +37,9 @@ def hr_profile(request):
         
     general_stat = {'avg_score_percentage':round(InterviewResult.objects.aggregate(avg_score_percentage=Avg('score_percentage'))['avg_score_percentage'], 2),
                               'completed_count':InterviewResult.objects.aggregate(count=Count(1))['count'],
-                              'active_vacancies_count':Vacancy.objects.filter(isActive = True).aggregate(count=Count(1))['count']}
+                              'active_vacancies_count':Vacancy.objects.filter(isActive = True).aggregate(count=Count(1))['count'],
+                              'inactive_vacancies_count':Vacancy.objects.filter(isActive = False).aggregate(count=Count(1))['count'],
+                              'last_interviews':InterviewResult.objects.all()[:5]}
 
     return render(request, 'employer/hr_ui.html',{'vacancies': vacancies,
                                                  'vacancies_json':json.dumps(vacancies_data),

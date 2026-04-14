@@ -16,8 +16,16 @@
                 <div class="logotext">HR Assistant</div>
             </div>
             <div class="links">
+                {% if user.is_authenticated %}
+                    <!-- <a href="{% url 'logout' %}" class="register">Выход</a> -->
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="register">Выход</button>
+                    </form>
+                {% else %}
                 <a href="{% url 'login' %}" class="login">Вход</a>
                 <a href="{% url 'register' %}" class="register">Регистрация</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -32,7 +40,7 @@
                 {% if is_hr %}
                     <form action="{% url 'hr_profile' %}" method="get">
                         {% csrf_token %}
-                        <button type="submit" class="btn">Начать</button>
+                        <button type="submit" class="btn">Открыть дашборд</button>
                     </form>
                 {% else %}
                     <form action="{% url 'vacancyinfo' %}" method="get">

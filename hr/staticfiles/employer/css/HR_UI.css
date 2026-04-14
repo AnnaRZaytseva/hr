@@ -106,6 +106,30 @@ background-color: #9d82f1;
 color: white;
 transform:scale(1.1);
 }
+
+/* По умолчанию контент скрыт */
+.report-content {
+    display: none; 
+    padding: 15px;
+    background-color: #ffffff;
+    border-top: 1px solid #eee;
+}
+
+/* Когда JS добавляет этот класс, блок показывается */
+.report-content.expanded {
+    display: block !important;
+}
+
+/* Указатель, что на заголовок можно нажать */
+.report-header {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.report-header:hover {
+    background-color: #f8f9fa;
+}
+
 .cards {
 display: flex;
 gap: 20px;
